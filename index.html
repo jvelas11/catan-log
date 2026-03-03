@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name="theme-color" content="#1a1208" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+  <meta name="theme-color" content="#1a1208"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
   <title>Catan Log</title>
   <link rel="manifest" href="/catan-log/manifest.json">
   <link rel="apple-touch-icon" href="/catan-log/icon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
   <style>
-    :root {
+    :root{
       --bg:#0f0d08;--surface:#1c1810;--surface2:#261f14;
       --gold:#c9933a;--gold-lt:#e8b86d;--sand:#d4b483;
-      --text:#ede0c4;--muted:#7a6a52;--red:#b84c3a;--green:#4a7c59;--blue:#3a5f8a;
-      --radius:14px;
+      --text:#ede0c4;--muted:#7a6a52;--red:#b84c3a;
+      --green:#4a7c59;--blue:#3a5f8a;--radius:14px;
     }
     *{box-sizing:border-box;margin:0;padding:0;}
     body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden;}
@@ -23,140 +23,206 @@
     .screen{display:none;flex-direction:column;min-height:100vh;position:relative;z-index:1;}
     .screen.active{display:flex;}
 
+    /* ── Header ── */
     header{padding:20px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #c9933a22;flex-shrink:0;}
     header h1{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:700;letter-spacing:0.08em;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
     .back-btn{background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer;padding:4px 8px;}
     .header-action{background:none;border:none;color:var(--muted);font-size:0.7rem;font-family:'Cinzel',serif;letter-spacing:0.1em;cursor:pointer;padding:4px 8px;}
     .header-action:hover{color:var(--gold);}
 
+    /* ── Nav ── */
     .bottom-nav{display:flex;border-top:1px solid #c9933a22;background:var(--surface);position:sticky;bottom:0;flex-shrink:0;}
-    .nav-btn{flex:1;background:none;border:none;color:var(--muted);padding:14px 8px 10px;cursor:pointer;font-family:'Crimson Pro',serif;font-size:0.7rem;letter-spacing:0.08em;display:flex;flex-direction:column;align-items:center;gap:4px;transition:color 0.2s;text-transform:uppercase;}
-    .nav-btn .nav-icon{font-size:1.3rem;}
+    .nav-btn{flex:1;background:none;border:none;color:var(--muted);padding:12px 4px 8px;cursor:pointer;font-family:'Crimson Pro',serif;font-size:0.65rem;letter-spacing:0.06em;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color 0.2s;text-transform:uppercase;}
+    .nav-btn .nav-icon{font-size:1.2rem;}
     .nav-btn.active{color:var(--gold);}
 
-    /* Home */
-    .hero{padding:32px 24px 16px;text-align:center;}
-    .hex-logo{width:80px;height:80px;margin:0 auto 16px;animation:float 4s ease-in-out infinite;}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-    .hero h2{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:400;color:var(--sand);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:6px;}
-    .hero p{color:var(--muted);font-size:1rem;font-style:italic;}
-    .main-action{margin:24px 20px;background:linear-gradient(135deg,#2a1f0e,#1c1508);border:1px solid var(--gold);border-radius:var(--radius);padding:24px;cursor:pointer;display:flex;align-items:center;gap:16px;box-shadow:0 4px 24px #c9933a18;position:relative;overflow:hidden;}
+    /* ── Shared ── */
+    .scroll-content{flex:1;overflow-y:auto;}
+    .section-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:0 20px 10px;}
+    .empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-style:italic;}
+    .empty-state .empty-icon{font-size:2.5rem;margin-bottom:12px;opacity:0.4;}
+    .card{background:var(--surface);border:1px solid #c9933a1a;border-radius:var(--radius);padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color 0.2s,transform 0.15s;display:flex;align-items:center;gap:14px;}
+    .card:hover{border-color:#c9933a44;}
+    .card:active{transform:scale(0.99);}
+    .card-info{flex:1;min-width:0;}
+    .card-info h4{font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold-lt);margin-bottom:3px;}
+    .card-info p{color:var(--muted);font-size:0.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .badge{font-size:0.7rem;border-radius:20px;padding:3px 10px;font-family:'Cinzel',serif;white-space:nowrap;}
+    .badge-green{color:var(--green);background:#4a7c5918;border:1px solid #4a7c5933;}
+    .badge-blue{color:#a8c8f0;background:#3a5f8a18;border:1px solid #3a5f8a33;}
+    .badge-gold{color:var(--gold);background:#c9933a12;border:1px solid #c9933a33;}
+
+    /* ── Form elements ── */
+    .field{margin-bottom:16px;}
+    .field label{display:block;font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+    .field input,.field select,.field textarea{width:100%;background:var(--surface);border:1px solid #c9933a33;border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Crimson Pro',serif;font-size:1rem;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);}
+    .field input::placeholder,.field textarea::placeholder{color:var(--muted);}
+    .field textarea{resize:vertical;min-height:72px;}
+    .field select option{background:var(--surface2);}
+
+    .btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),#a0712a);border:none;border-radius:var(--radius);color:#1a1208;font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;margin-top:8px;text-transform:uppercase;transition:opacity 0.2s,transform 0.15s;}
+    .btn-primary:active{transform:scale(0.98);opacity:0.9;}
+    .btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+    .btn-secondary{width:100%;padding:12px;background:none;border:1px solid #c9933a44;border-radius:var(--radius);color:var(--gold);font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.08em;cursor:pointer;margin-top:8px;}
+    .btn-ghost{background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem;font-family:'Cinzel',serif;letter-spacing:0.05em;}
+    .btn-ghost:hover{color:var(--gold);}
+
+    /* ── Home ── */
+    .hero{padding:28px 24px 12px;text-align:center;}
+    .hex-logo{width:72px;height:72px;margin:0 auto 14px;animation:float 4s ease-in-out infinite;}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+    .hero h2{font-family:'Cinzel',serif;font-size:1rem;font-weight:400;color:var(--sand);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:4px;}
+    .hero p{color:var(--muted);font-size:0.9rem;font-style:italic;}
+    .main-action{margin:20px 20px 8px;background:linear-gradient(135deg,#2a1f0e,#1c1508);border:1px solid var(--gold);border-radius:var(--radius);padding:20px;cursor:pointer;display:flex;align-items:center;gap:14px;box-shadow:0 4px 24px #c9933a18;position:relative;overflow:hidden;}
     .main-action::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#c9933a12,transparent);opacity:0;transition:opacity 0.2s;}
     .main-action:hover::before{opacity:1;}
     .main-action:active{transform:scale(0.98);}
-    .main-action-icon{font-size:2.2rem;line-height:1;}
-    .main-action-text h3{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold-lt);margin-bottom:4px;}
-    .main-action-text p{color:var(--muted);font-size:0.85rem;}
-    .section-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:0 20px 10px;}
-    .game-list{padding:0 20px;flex:1;}
-    .empty-state{text-align:center;padding:48px 20px;color:var(--muted);font-style:italic;}
-    .empty-state .empty-icon{font-size:2.5rem;margin-bottom:12px;opacity:0.4;}
-    .game-card{background:var(--surface);border:1px solid #c9933a1a;border-radius:var(--radius);padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color 0.2s,transform 0.15s;display:flex;align-items:center;gap:14px;}
-    .game-card:hover{border-color:#c9933a44;}
-    .game-card:active{transform:scale(0.99);}
-    .game-card-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;}
-    .game-card-hex{font-size:1.8rem;flex-shrink:0;width:48px;text-align:center;}
-    .game-card-info{flex:1;min-width:0;}
-    .game-card-info h4{font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold-lt);margin-bottom:3px;}
-    .game-card-info p{color:var(--muted);font-size:0.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .game-card-winner{font-size:0.75rem;color:var(--green);background:#4a7c5918;border:1px solid #4a7c5933;border-radius:20px;padding:3px 10px;font-family:'Cinzel',serif;white-space:nowrap;}
-    .ai-badge{font-size:0.65rem;color:#a8c8f0;background:#3a5f8a18;border:1px solid #3a5f8a33;border-radius:20px;padding:2px 8px;font-family:'Cinzel',serif;}
+    .main-action-icon{font-size:2rem;}
+    .main-action-text h3{font-family:'Cinzel',serif;font-size:0.95rem;color:var(--gold-lt);margin-bottom:3px;}
+    .main-action-text p{color:var(--muted);font-size:0.82rem;}
+    .game-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+    .game-hex{font-size:1.6rem;flex-shrink:0;width:44px;text-align:center;}
 
-    /* New Game */
-    .new-game-content{flex:1;padding:20px;overflow-y:auto;}
-    .step-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:28px;}
+    /* ── New Game steps ── */
+    .step-wrap{flex:1;padding:20px;overflow-y:auto;}
+    .step-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:24px;}
     .step-dot{width:8px;height:8px;border-radius:50%;background:var(--surface2);transition:background 0.3s;}
     .step-dot.active{background:var(--gold);}
     .step-dot.done{background:var(--green);}
     .step{display:none;animation:fadeIn 0.3s ease;}
     .step.active{display:block;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .step-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-lt);margin-bottom:6px;}
-    .step-sub{color:var(--muted);font-size:0.9rem;margin-bottom:24px;font-style:italic;}
-    .photo-options{display:flex;gap:10px;margin-bottom:16px;}
-    .photo-opt-btn{flex:1;background:var(--surface);border:1px solid #c9933a33;border-radius:10px;padding:12px;cursor:pointer;color:var(--sand);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.05em;display:flex;flex-direction:column;align-items:center;gap:6px;transition:border-color 0.2s,background 0.2s;}
+    .step-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-lt);margin-bottom:5px;}
+    .step-sub{color:var(--muted);font-size:0.88rem;margin-bottom:20px;font-style:italic;}
+
+    /* Photo */
+    .photo-options{display:flex;gap:10px;margin-bottom:14px;}
+    .photo-opt-btn{flex:1;background:var(--surface);border:1px solid #c9933a33;border-radius:10px;padding:11px;cursor:pointer;color:var(--sand);font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.05em;display:flex;flex-direction:column;align-items:center;gap:5px;}
     .photo-opt-btn:hover{border-color:var(--gold);background:var(--surface2);}
-    .photo-opt-btn .opt-icon{font-size:1.5rem;}
-    .photo-zone{border:2px dashed #c9933a44;border-radius:var(--radius);padding:40px 20px;text-align:center;background:var(--surface);margin-bottom:16px;transition:border-color 0.2s;}
+    .photo-zone{border:2px dashed #c9933a44;border-radius:var(--radius);padding:36px 20px;text-align:center;background:var(--surface);margin-bottom:14px;}
     .photo-zone.has-photo{padding:0;border-style:solid;}
     .photo-zone img{width:100%;border-radius:12px;display:block;}
-    .photo-zone-icon{font-size:2.5rem;margin-bottom:12px;}
-    .photo-zone-text{color:var(--muted);font-size:0.9rem;}
-    .photo-zone-text strong{color:var(--sand);display:block;font-size:1rem;margin-bottom:4px;}
-    .field{margin-bottom:18px;}
-    .field label{display:block;font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-    .field input{width:100%;background:var(--surface);border:1px solid #c9933a33;border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Crimson Pro',serif;font-size:1rem;outline:none;transition:border-color 0.2s;}
-    .field input:focus{border-color:var(--gold);}
-    .field input::placeholder{color:var(--muted);}
-    .player-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
-    .player-row{display:flex;gap:8px;align-items:center;}
-    .player-row input{flex:1;}
-    .remove-btn{background:none;border:1px solid #b84c3a44;border-radius:8px;color:var(--red);width:36px;height:44px;cursor:pointer;font-size:1rem;flex-shrink:0;}
-    .add-player-btn{background:none;border:1px dashed #c9933a44;border-radius:10px;padding:10px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.1em;cursor:pointer;width:100%;}
+    .photo-zone-icon{font-size:2.2rem;margin-bottom:10px;}
+    .photo-zone-text{color:var(--muted);font-size:0.88rem;}
+    .photo-zone-text strong{color:var(--sand);display:block;margin-bottom:3px;}
+
+    /* Player selector */
+    .player-picker{margin-bottom:16px;}
+    .player-chip-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;min-height:40px;}
+    .player-chip{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid #c9933a33;border-radius:20px;padding:6px 12px;font-size:0.85rem;cursor:pointer;transition:border-color 0.2s;}
+    .player-chip.selected{border-color:var(--gold);background:#c9933a18;}
+    .player-chip .color-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+    .player-chip .chip-remove{color:var(--muted);font-size:0.75rem;margin-left:2px;}
+    .player-chip.selected .chip-remove{color:var(--gold);}
+    .add-new-player-row{display:flex;gap:8px;margin-top:8px;}
+    .add-new-player-row input{flex:1;background:var(--surface);border:1px solid #c9933a33;border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Crimson Pro',serif;font-size:0.95rem;outline:none;}
+    .add-new-player-row input:focus{border-color:var(--gold);}
+    .add-new-player-row button{background:none;border:1px solid #c9933a44;border-radius:10px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;padding:0 14px;cursor:pointer;white-space:nowrap;}
+
+    /* Participant rows */
+    .participant-row{background:var(--surface);border:1px solid #c9933a1a;border-radius:12px;padding:14px;margin-bottom:10px;}
+    .participant-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+    .participant-color{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
+    .participant-name{font-family:'Cinzel',serif;font-size:0.9rem;color:var(--gold-lt);flex:1;}
+    .vp-control{display:flex;align-items:center;gap:10px;}
+    .vp-btn{width:32px;height:32px;border-radius:50%;border:1px solid #c9933a33;background:none;color:var(--gold);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .vp-btn:active{background:#c9933a22;}
+    .vp-value{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold-lt);min-width:28px;text-align:center;}
+    .toggle-row{display:flex;gap:8px;flex-wrap:wrap;}
+    .toggle-chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid #c9933a22;border-radius:20px;padding:5px 11px;font-size:0.75rem;cursor:pointer;transition:border-color 0.2s,background 0.2s;color:var(--muted);}
+    .toggle-chip.on{border-color:var(--gold);background:#c9933a18;color:var(--sand);}
+
+    /* Winner select */
     .winner-select{display:flex;flex-direction:column;gap:8px;}
     .winner-opt{background:var(--surface);border:1px solid #c9933a22;border-radius:10px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color 0.2s;color:var(--text);font-size:0.95rem;}
     .winner-opt.selected{border-color:var(--green);background:#4a7c5910;}
     .winner-opt .check{color:var(--green);margin-left:auto;opacity:0;}
     .winner-opt.selected .check{opacity:1;}
-    .btn-primary{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),#a0712a);border:none;border-radius:var(--radius);color:#1a1208;font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;margin-top:8px;text-transform:uppercase;transition:opacity 0.2s,transform 0.15s;}
-    .btn-primary:active{transform:scale(0.98);opacity:0.9;}
-    .btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
-    .btn-secondary{width:100%;padding:13px;background:none;border:1px solid #c9933a44;border-radius:var(--radius);color:var(--gold);font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.08em;cursor:pointer;margin-top:8px;}
 
-    /* Detail */
-    .detail-content{flex:1;padding:20px;overflow-y:auto;}
-    .detail-photo{width:100%;border-radius:var(--radius);margin-bottom:20px;}
-    .detail-photo-placeholder{width:100%;aspect-ratio:4/3;background:var(--surface2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:20px;border:1px solid #c9933a1a;}
-    .detail-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
-    .meta-chip{background:var(--surface2);border:1px solid #c9933a22;border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--sand);display:flex;align-items:center;gap:6px;}
+    /* ── Detail ── */
+    .detail-wrap{flex:1;padding:20px;overflow-y:auto;}
+    .detail-photo{width:100%;border-radius:var(--radius);margin-bottom:18px;}
+    .detail-photo-placeholder{width:100%;aspect-ratio:4/3;background:var(--surface2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:18px;border:1px solid #c9933a1a;}
+    .detail-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+    .meta-chip{background:var(--surface2);border:1px solid #c9933a22;border-radius:20px;padding:5px 13px;font-size:0.78rem;color:var(--sand);}
     .detail-section{margin-bottom:20px;}
-    .detail-section h3{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
-    .player-result{display:flex;align-items:center;background:var(--surface);border:1px solid #c9933a1a;border-radius:10px;padding:12px 16px;margin-bottom:8px;}
-    .player-result .name{flex:1;font-size:0.95rem;}
+    .detail-section h3{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+    .result-row{display:flex;align-items:center;background:var(--surface);border:1px solid #c9933a1a;border-radius:10px;padding:11px 14px;margin-bottom:7px;gap:10px;}
+    .result-color{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+    .result-name{flex:1;font-size:0.95rem;}
+    .result-vp{font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold);}
+    .result-badges{display:flex;gap:4px;}
+    .result-badge{font-size:0.65rem;background:var(--surface2);border-radius:4px;padding:2px 5px;color:var(--muted);}
+    .notes-box{background:var(--surface);border:1px solid #c9933a1a;border-radius:10px;padding:13px;font-size:0.9rem;color:var(--sand);line-height:1.5;font-style:italic;}
 
-    /* AI */
-    .analyse-btn{width:100%;padding:15px;background:linear-gradient(135deg,#1e3a5f,#0f2040);border:1px solid var(--blue);border-radius:var(--radius);color:#a8c8f0;font-family:'Cinzel',serif;font-size:0.9rem;letter-spacing:0.1em;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s,transform 0.15s;}
-    .analyse-btn:active{transform:scale(0.98);}
+    /* ── AI ── */
+    .analyse-btn{width:100%;padding:14px;background:linear-gradient(135deg,#1e3a5f,#0f2040);border:1px solid var(--blue);border-radius:var(--radius);color:#a8c8f0;font-family:'Cinzel',serif;font-size:0.88rem;letter-spacing:0.1em;cursor:pointer;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:10px;}
     .analyse-btn:disabled{opacity:0.4;cursor:not-allowed;}
-    .analysis-loading{background:var(--surface);border:1px solid #3a5f8a44;border-radius:var(--radius);padding:32px 20px;text-align:center;margin-bottom:16px;}
-    .spinner{width:40px;height:40px;margin:0 auto 16px;border:3px solid #3a5f8a33;border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;}
+    .analysis-loading{background:var(--surface);border:1px solid #3a5f8a44;border-radius:var(--radius);padding:28px 20px;text-align:center;margin-bottom:14px;}
+    .spinner{width:36px;height:36px;margin:0 auto 14px;border:3px solid #3a5f8a33;border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .analysis-loading p{color:var(--muted);font-style:italic;font-size:0.9rem;}
-
-    /* Hex Grid */
-    .hex-grid-container{background:var(--surface);border:1px solid #c9933a22;border-radius:var(--radius);padding:16px;margin-bottom:16px;}
-    .hex-grid-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+    .analysis-loading p{color:var(--muted);font-style:italic;font-size:0.88rem;}
+    .hex-grid-container{background:var(--surface);border:1px solid #c9933a22;border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+    .hex-grid-title{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
     .hex-svg{display:block;margin:0 auto;}
-    .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
-    .legend-item{display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--muted);}
-    .legend-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
-    .analysis-summary{background:var(--surface2);border:1px solid #3a5f8a33;border-radius:10px;padding:14px;margin-bottom:12px;font-size:0.85rem;color:var(--sand);line-height:1.6;}
-    .warn-notice{background:#c9933a0d;border:1px solid #c9933a33;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:0.8rem;color:var(--gold-lt);display:flex;gap:8px;}
+    .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .legend-item{display:flex;align-items:center;gap:5px;font-size:0.7rem;color:var(--muted);}
+    .legend-swatch{width:11px;height:11px;border-radius:3px;flex-shrink:0;}
+    .analysis-summary{background:var(--surface2);border:1px solid #3a5f8a33;border-radius:10px;padding:12px;margin-bottom:10px;font-size:0.85rem;color:var(--sand);line-height:1.5;}
+    .warn-notice{background:#c9933a0d;border:1px solid #c9933a33;border-radius:10px;padding:11px 13px;margin-bottom:10px;font-size:0.78rem;color:var(--gold-lt);display:flex;gap:8px;}
 
-    /* Settings */
-    .settings-content{flex:1;padding:20px;overflow-y:auto;}
-    .settings-section{margin-bottom:28px;}
-    .settings-section h3{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
-    .settings-row{background:var(--surface);border:1px solid #c9933a1a;border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
-    .settings-row-label{font-size:0.95rem;color:var(--text);}
-    .settings-row-value{font-size:0.8rem;color:var(--muted);font-family:monospace;}
-    .settings-row-btn{background:none;border:1px solid #c9933a33;border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.7rem;padding:5px 12px;cursor:pointer;}
-    .key-status{display:inline-flex;align-items:center;gap:6px;font-size:0.8rem;margin-top:4px;}
+    /* ── Players screen ── */
+    .player-card{background:var(--surface);border:1px solid #c9933a1a;border-radius:var(--radius);padding:15px 16px;margin-bottom:10px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:border-color 0.2s;}
+    .player-card:hover{border-color:#c9933a44;}
+    .player-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1rem;font-weight:700;flex-shrink:0;border:2px solid #c9933a44;}
+    .player-card-info{flex:1;}
+    .player-card-info h4{font-family:'Cinzel',serif;font-size:0.9rem;color:var(--gold-lt);margin-bottom:2px;}
+    .player-card-info p{color:var(--muted);font-size:0.78rem;}
+
+    /* ── Stats screen ── */
+    .stats-wrap{flex:1;padding:20px;overflow-y:auto;}
+    .stat-card{background:var(--surface);border:1px solid #c9933a1a;border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+    .stat-card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+    .stat-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+    .stat-player-name{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold-lt);}
+    .stat-player-sub{color:var(--muted);font-size:0.78rem;margin-top:2px;}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+    .stat-item{background:var(--surface2);border-radius:8px;padding:10px;text-align:center;}
+    .stat-value{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold-lt);display:block;}
+    .stat-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;display:block;}
+    .win-bar-wrap{margin-top:10px;}
+    .win-bar-label{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted);margin-bottom:4px;}
+    .win-bar-bg{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+    .win-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:3px;transition:width 0.5s ease;}
+
+    /* ── Settings ── */
+    .settings-wrap{flex:1;padding:20px;overflow-y:auto;}
+    .settings-section{margin-bottom:26px;}
+    .settings-section h3{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+    .settings-row{background:var(--surface);border:1px solid #c9933a1a;border-radius:10px;padding:13px 15px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;}
+    .settings-row-label{font-size:0.93rem;color:var(--text);}
+    .settings-row-value{font-size:0.78rem;color:var(--muted);font-family:monospace;}
+    .settings-row-btn{background:none;border:1px solid #c9933a33;border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.68rem;padding:5px 11px;cursor:pointer;}
+    .key-status{display:inline-flex;align-items:center;gap:5px;font-size:0.78rem;margin-top:3px;}
     .key-status.set{color:var(--green);}
     .key-status.missing{color:var(--red);}
 
-    /* Modal */
+    /* ── Modal ── */
     .modal-overlay{position:fixed;inset:0;background:#0f0d08ee;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
     .modal-overlay.show{display:flex;}
-    .modal{background:var(--surface);border:1px solid var(--gold);border-radius:var(--radius);padding:28px;width:100%;max-width:400px;}
+    .modal{background:var(--surface);border:1px solid var(--gold);border-radius:var(--radius);padding:26px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto;}
     .modal h2{font-family:'Cinzel',serif;color:var(--gold-lt);font-size:1rem;margin-bottom:8px;}
-    .modal p{color:var(--muted);font-size:0.85rem;margin-bottom:16px;line-height:1.5;}
-    .modal input{width:100%;background:var(--bg);border:1px solid #c9933a33;border-radius:10px;padding:12px;color:var(--text);font-family:monospace;font-size:0.85rem;outline:none;margin-bottom:6px;}
+    .modal p{color:var(--muted);font-size:0.85rem;margin-bottom:14px;line-height:1.5;}
+    .modal input{width:100%;background:var(--bg);border:1px solid #c9933a33;border-radius:10px;padding:11px;color:var(--text);font-family:'Crimson Pro',serif;font-size:1rem;outline:none;margin-bottom:8px;}
     .modal input:focus{border-color:var(--gold);}
-    .modal-note{font-size:0.75rem;color:var(--muted);font-style:italic;margin-bottom:16px;line-height:1.4;}
+    .modal-note{font-size:0.75rem;color:var(--muted);font-style:italic;margin-bottom:14px;line-height:1.4;}
+    .color-picker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+    .color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s,transform 0.15s;}
+    .color-swatch.selected{border-color:white;transform:scale(1.15);}
 
-    /* Toast */
-    .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:white;padding:10px 20px;border-radius:20px;font-family:'Cinzel',serif;font-size:0.8rem;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;z-index:100;}
+    /* ── Toast ── */
+    .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:white;padding:9px 18px;border-radius:20px;font-family:'Cinzel',serif;font-size:0.78rem;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;z-index:300;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     .toast.error{background:var(--red);}
     ::-webkit-scrollbar{width:4px;}
@@ -165,13 +231,13 @@
 </head>
 <body>
 
-<!-- HOME -->
+<!-- ═══ HOME ═══ -->
 <div class="screen active" id="screen-home">
   <header>
     <h1>CATAN LOG</h1>
     <button class="header-action" onclick="showScreen('screen-settings')">⚙ Settings</button>
   </header>
-  <div style="flex:1;overflow-y:auto">
+  <div class="scroll-content">
     <div class="hero">
       <svg class="hex-logo" viewBox="0 0 100 115" fill="none">
         <polygon points="50,5 95,28.75 95,86.25 50,110 5,86.25 5,28.75" fill="#1c1810" stroke="#c9933a" stroke-width="2"/>
@@ -187,243 +253,471 @@
       <span style="color:var(--gold);font-size:1.2rem">›</span>
     </div>
     <div class="section-title">Recent Sessions</div>
-    <div class="game-list" id="game-list"></div>
+    <div style="padding:0 20px" id="game-list"></div>
   </div>
   <nav class="bottom-nav">
     <button class="nav-btn active" onclick="showScreen('screen-home')"><span class="nav-icon">🏠</span>Home</button>
-    <button class="nav-btn" onclick="showScreen('screen-new')"><span class="nav-icon">＋</span>New Game</button>
+    <button class="nav-btn" onclick="showScreen('screen-new')"><span class="nav-icon">＋</span>New</button>
     <button class="nav-btn" onclick="showScreen('screen-history')"><span class="nav-icon">📜</span>History</button>
+    <button class="nav-btn" onclick="showScreen('screen-players')"><span class="nav-icon">👥</span>Players</button>
+    <button class="nav-btn" onclick="showScreen('screen-stats')"><span class="nav-icon">📊</span>Stats</button>
   </nav>
 </div>
 
-<!-- NEW GAME -->
+<!-- ═══ NEW GAME ═══ -->
 <div class="screen" id="screen-new">
   <header>
     <button class="back-btn" onclick="showScreen('screen-home')">‹</button>
     <h1>NEW SESSION</h1>
     <div style="width:60px"></div>
   </header>
-  <div class="new-game-content">
+  <div class="step-wrap">
     <div class="step-indicator">
       <div class="step-dot active" id="dot-0"></div>
       <div class="step-dot" id="dot-1"></div>
       <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
     </div>
+
+    <!-- Step 0: Photo -->
     <div class="step active" id="step-0">
       <div class="step-title">Capture the Board</div>
       <div class="step-sub">Take a photo or upload an image of your Catan board</div>
       <div class="photo-options">
-        <label class="photo-opt-btn"><span class="opt-icon">📷</span>Camera<input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(this)"></label>
-        <label class="photo-opt-btn"><span class="opt-icon">🖼️</span>Gallery<input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)"></label>
+        <label class="photo-opt-btn"><span style="font-size:1.4rem">📷</span>Camera<input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(this)"></label>
+        <label class="photo-opt-btn"><span style="font-size:1.4rem">🖼️</span>Gallery<input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)"></label>
       </div>
       <div class="photo-zone" id="photo-zone">
         <div class="photo-zone-icon">⬡</div>
-        <div class="photo-zone-text"><strong>No photo selected</strong>Use the buttons above to add your board photo</div>
+        <div class="photo-zone-text"><strong>No photo selected</strong>Use the buttons above</div>
       </div>
       <button class="btn-primary" onclick="nextStep()">Continue →</button>
-      <button class="btn-secondary" onclick="skipPhoto()">Skip for now</button>
+      <button class="btn-secondary" onclick="skipPhoto()">Skip photo</button>
     </div>
+
+    <!-- Step 1: Players -->
     <div class="step" id="step-1">
       <div class="step-title">Who's Playing?</div>
-      <div class="step-sub">Add the players in this session</div>
+      <div class="step-sub">Select from your roster or add a new player</div>
       <div class="field"><label>Date</label><input type="date" id="game-date"/></div>
-      <div class="field">
-        <label>Players</label>
-        <div class="player-list" id="player-list">
-          <div class="player-row"><input type="text" placeholder="Player name" class="player-input"/></div>
+      <div class="player-picker">
+        <label style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px">Players in this game</label>
+        <div class="player-chip-list" id="player-chip-list"></div>
+        <div class="add-new-player-row">
+          <input type="text" id="new-player-name" placeholder="Add new player…" onkeydown="if(event.key==='Enter')quickAddPlayer()"/>
+          <button onclick="quickAddPlayer()">+ Add</button>
         </div>
-        <button class="add-player-btn" onclick="addPlayer()">+ Add Player</button>
       </div>
       <button class="btn-primary" onclick="nextStep()">Continue →</button>
       <button class="btn-secondary" onclick="prevStep()">‹ Back</button>
     </div>
+
+    <!-- Step 2: Scores -->
     <div class="step" id="step-2">
-      <div class="step-title">Who Won?</div>
-      <div class="step-sub">Select the winner of this session</div>
-      <div class="winner-select" id="winner-select"></div>
-      <button class="btn-primary" onclick="saveGame()" style="margin-top:24px">Save Session ✓</button>
+      <div class="step-title">Record Scores</div>
+      <div class="step-sub">Enter victory points and special achievements</div>
+      <div id="participant-rows"></div>
+      <button class="btn-primary" onclick="nextStep()">Continue →</button>
+      <button class="btn-secondary" onclick="prevStep()">‹ Back</button>
+    </div>
+
+    <!-- Step 3: Game details -->
+    <div class="step" id="step-3">
+      <div class="step-title">Game Details</div>
+      <div class="step-sub">A few final details about this session</div>
+      <div class="field">
+        <label>Expansion</label>
+        <select id="game-expansion">
+          <option value="base">Base Game</option>
+          <option value="seafarers">Seafarers</option>
+          <option value="cities">Cities &amp; Knights</option>
+          <option value="traders">Traders &amp; Barbarians</option>
+          <option value="explorers">Explorers &amp; Pirates</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="game-notes" placeholder="Anything memorable about this game…"></textarea>
+      </div>
+      <button class="btn-primary" onclick="saveGame()">Save Session ✓</button>
       <button class="btn-secondary" onclick="prevStep()">‹ Back</button>
     </div>
   </div>
 </div>
 
-<!-- HISTORY -->
+<!-- ═══ HISTORY ═══ -->
 <div class="screen" id="screen-history">
   <header>
     <button class="back-btn" onclick="showScreen('screen-home')">‹</button>
     <h1>HISTORY</h1>
     <div style="width:40px"></div>
   </header>
-  <div style="flex:1;padding:20px;overflow-y:auto" id="history-list"></div>
+  <div class="scroll-content" style="padding:20px" id="history-list"></div>
   <nav class="bottom-nav">
     <button class="nav-btn" onclick="showScreen('screen-home')"><span class="nav-icon">🏠</span>Home</button>
-    <button class="nav-btn" onclick="showScreen('screen-new')"><span class="nav-icon">＋</span>New Game</button>
+    <button class="nav-btn" onclick="showScreen('screen-new')"><span class="nav-icon">＋</span>New</button>
     <button class="nav-btn active"><span class="nav-icon">📜</span>History</button>
+    <button class="nav-btn" onclick="showScreen('screen-players')"><span class="nav-icon">👥</span>Players</button>
+    <button class="nav-btn" onclick="showScreen('screen-stats')"><span class="nav-icon">📊</span>Stats</button>
   </nav>
 </div>
 
-<!-- DETAIL -->
+<!-- ═══ DETAIL ═══ -->
 <div class="screen" id="screen-detail">
   <header>
     <button class="back-btn" id="detail-back">‹</button>
     <h1>SESSION</h1>
     <div style="width:60px"></div>
   </header>
-  <div class="detail-content" id="detail-content"></div>
+  <div class="detail-wrap" id="detail-content"></div>
 </div>
 
-<!-- SETTINGS -->
+<!-- ═══ PLAYERS ═══ -->
+<div class="screen" id="screen-players">
+  <header>
+    <button class="back-btn" onclick="showScreen('screen-home')">‹</button>
+    <h1>PLAYERS</h1>
+    <button class="header-action" onclick="showAddPlayerModal()">+ New</button>
+  </header>
+  <div class="scroll-content" style="padding:20px" id="player-list-screen"></div>
+  <nav class="bottom-nav">
+    <button class="nav-btn" onclick="showScreen('screen-home')"><span class="nav-icon">🏠</span>Home</button>
+    <button class="nav-btn" onclick="showScreen('screen-new')"><span class="nav-icon">＋</span>New</button>
+    <button class="nav-btn" onclick="showScreen('screen-history')"><span class="nav-icon">📜</span>History</button>
+    <button class="nav-btn active"><span class="nav-icon">👥</span>Players</button>
+    <button class="nav-btn" onclick="showScreen('screen-stats')"><span class="nav-icon">📊</span>Stats</button>
+  </nav>
+</div>
+
+<!-- ═══ STATS ═══ -->
+<div class="screen" id="screen-stats">
+  <header>
+    <button class="back-btn" onclick="showScreen('screen-home')">‹</button>
+    <h1>STATS</h1>
+    <div style="width:40px"></div>
+  </header>
+  <div class="stats-wrap" id="stats-content"></div>
+  <nav class="bottom-nav">
+    <button class="nav-btn" onclick="showScreen('screen-home')"><span class="nav-icon">🏠</span>Home</button>
+    <button class="nav-btn" onclick="showScreen('screen-new')"><span class="nav-icon">＋</span>New</button>
+    <button class="nav-btn" onclick="showScreen('screen-history')"><span class="nav-icon">📜</span>History</button>
+    <button class="nav-btn" onclick="showScreen('screen-players')"><span class="nav-icon">👥</span>Players</button>
+    <button class="nav-btn active"><span class="nav-icon">📊</span>Stats</button>
+  </nav>
+</div>
+
+<!-- ═══ SETTINGS ═══ -->
 <div class="screen" id="screen-settings">
   <header>
     <button class="back-btn" onclick="showScreen('screen-home')">‹</button>
     <h1>SETTINGS</h1>
     <div style="width:40px"></div>
   </header>
-  <div class="settings-content">
+  <div class="settings-wrap">
     <div class="settings-section">
       <h3>AI Analysis</h3>
       <div class="settings-row">
-        <div>
-          <div class="settings-row-label">Anthropic API Key</div>
-          <div id="key-status-display" class="key-status missing">● Not configured</div>
-        </div>
+        <div><div class="settings-row-label">Anthropic API Key</div><div id="key-status-display" class="key-status missing">● Not configured</div></div>
         <button class="settings-row-btn" onclick="showApiModal()">Configure</button>
       </div>
-      <p style="color:var(--muted);font-size:0.78rem;margin-top:8px;line-height:1.5;font-style:italic">Your key is stored only on this device and sent exclusively to Anthropic when you analyse a board.</p>
+      <p style="color:var(--muted);font-size:0.76rem;margin-top:8px;line-height:1.5;font-style:italic">Stored only on this device, sent only to Anthropic when you analyse a board.</p>
     </div>
     <div class="settings-section">
       <h3>Data</h3>
-      <div class="settings-row">
-        <div class="settings-row-label">Saved sessions</div>
-        <div class="settings-row-value" id="session-count-setting">0</div>
-      </div>
+      <div class="settings-row"><div class="settings-row-label">Sessions</div><div class="settings-row-value" id="setting-sessions">0</div></div>
+      <div class="settings-row"><div class="settings-row-label">Players</div><div class="settings-row-value" id="setting-players">0</div></div>
       <button class="btn-secondary" onclick="clearAllData()" style="border-color:#b84c3a44;color:var(--red);margin-top:8px">Clear All Data</button>
     </div>
     <div class="settings-section">
       <h3>About</h3>
-      <div class="settings-row"><div class="settings-row-label">Version</div><div class="settings-row-value">Sprint 2 — AI Detection</div></div>
+      <div class="settings-row"><div class="settings-row-label">Version</div><div class="settings-row-value">Sprint 3 — Game Logging</div></div>
     </div>
   </div>
 </div>
 
-<!-- API KEY MODAL -->
+<!-- ═══ ADD PLAYER MODAL ═══ -->
+<div class="modal-overlay" id="player-modal">
+  <div class="modal">
+    <h2 id="player-modal-title">New Player</h2>
+    <div class="field"><label>Name</label><input type="text" id="pm-name" placeholder="Player name"/></div>
+    <div class="field">
+      <label>Preferred Catan Colour</label>
+      <div class="color-picker" id="pm-color-picker"></div>
+    </div>
+    <button class="btn-primary" onclick="savePlayerModal()">Save Player</button>
+    <button class="btn-secondary" onclick="closePlayerModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- ═══ API KEY MODAL ═══ -->
 <div class="modal-overlay" id="api-modal">
   <div class="modal">
     <h2>🔑 Configure API Key</h2>
-    <p>Enter your Anthropic API key to enable AI board analysis. Find it at <strong style="color:var(--sand)">console.anthropic.com</strong> under API Keys.</p>
-    <input type="password" id="api-key-input" placeholder="sk-ant-..." autocomplete="off"/>
-    <p class="modal-note">Stored locally on this device only. Never sent to any server other than Anthropic's.</p>
+    <p>Enter your Anthropic API key to enable AI board analysis. Find it at <strong style="color:var(--sand)">console.anthropic.com</strong></p>
+    <input type="password" id="api-key-input" placeholder="sk-ant-…" autocomplete="off"/>
+    <p class="modal-note">Stored locally on this device only.</p>
     <button class="btn-primary" onclick="saveApiKey()">Save Key</button>
-    <button class="btn-secondary" onclick="closeApiModal()">Cancel</button>
+    <button class="btn-secondary" onclick="document.getElementById('api-modal').classList.remove('show')">Cancel</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ── State ──
-let games = JSON.parse(localStorage.getItem('catan-games') || '[]');
-let currentPhoto = null, currentStep = 0, selectedWinner = 'Unknown', prevScreen = 'screen-home';
+// ══════════════════════════════════════════
+// CONSTANTS & STATE
+// ══════════════════════════════════════════
+const COLORS = [
+  {name:'Red',    hex:'#c0392b'},
+  {name:'Blue',   hex:'#2980b9'},
+  {name:'White',  hex:'#ecf0f1'},
+  {name:'Orange', hex:'#e67e22'},
+  {name:'Green',  hex:'#27ae60'},
+  {name:'Brown',  hex:'#795548'},
+];
 
-// ── Navigation ──
+let db = loadDB();
+let newGame = {};
+let prevScreen = 'screen-home';
+let editingPlayerId = null;
+
+// ══════════════════════════════════════════
+// DATABASE — simple localStorage wrapper
+// ══════════════════════════════════════════
+function loadDB() {
+  const raw = localStorage.getItem('catan-db');
+  if (raw) {
+    try { return JSON.parse(raw); } catch(e){}
+  }
+  // Migrate legacy data
+  const legacy = localStorage.getItem('catan-games');
+  if (legacy) {
+    try {
+      const oldGames = JSON.parse(legacy);
+      const migrated = { players:[], games:[] };
+      const playerMap = {};
+      oldGames.forEach(og => {
+        const participants = [];
+        (og.players||[]).forEach(name => {
+          if (!playerMap[name]) {
+            const p = { id: uid(), name, preferredColor: COLORS[Object.keys(playerMap).length % COLORS.length].hex, createdAt: Date.now() };
+            migrated.players.push(p);
+            playerMap[name] = p.id;
+          }
+          participants.push({ id:uid(), playerId:playerMap[name], victoryPoints:0, isWinner: og.winner===name, hadLongestRoad:false, hadLargestArmy:false });
+        });
+        migrated.games.push({ id:og.id, date:og.date, photo:og.photo, boardAnalysis:og.boardAnalysis||null, expansion:'base', notes:'', participants, createdAt:og.id });
+      });
+      saveDB(migrated);
+      return migrated;
+    } catch(e) {}
+  }
+  return { players:[], games:[] };
+}
+
+function saveDB(data) {
+  if (data) db = data;
+  localStorage.setItem('catan-db', JSON.stringify(db));
+}
+
+function uid() { return Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+
+function playerById(id) { return db.players.find(p=>p.id===id); }
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if (id === 'screen-home') renderHome();
-  if (id === 'screen-history') renderHistory();
-  if (id === 'screen-new') initNewGame();
-  if (id === 'screen-settings') renderSettings();
+  const renders = {
+    'screen-home': renderHome,
+    'screen-history': renderHistory,
+    'screen-new': initNewGame,
+    'screen-players': renderPlayers,
+    'screen-stats': renderStats,
+    'screen-settings': renderSettings,
+  };
+  if (renders[id]) renders[id]();
 }
 
-// ── New Game ──
+// ══════════════════════════════════════════
+// NEW GAME FLOW
+// ══════════════════════════════════════════
 function initNewGame() {
-  currentStep = 0; currentPhoto = null; selectedWinner = 'Unknown';
+  newGame = { photo:null, participants:[], expansion:'base', notes:'' };
+  currentStep = 0;
   document.getElementById('game-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('player-list').innerHTML = `<div class="player-row"><input type="text" placeholder="Player name" class="player-input"/></div>`;
+  document.getElementById('game-notes').value = '';
+  document.getElementById('game-expansion').value = 'base';
+  document.getElementById('new-player-name').value = '';
+  resetPhotoZone();
   updateSteps();
-  const zone = document.getElementById('photo-zone');
-  zone.innerHTML = `<div class="photo-zone-icon">⬡</div><div class="photo-zone-text"><strong>No photo selected</strong>Use the buttons above to add your board photo</div>`;
-  zone.classList.remove('has-photo');
+  renderPlayerChips();
 }
 
+let currentStep = 0;
 function updateSteps() {
-  document.querySelectorAll('.step').forEach((s,i) => s.classList.toggle('active', i===currentStep));
-  document.querySelectorAll('.step-dot').forEach((d,i) => { d.classList.toggle('active',i===currentStep); d.classList.toggle('done',i<currentStep); });
+  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i===currentStep));
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.toggle('active',i===currentStep);d.classList.toggle('done',i<currentStep);});
 }
-function nextStep() { if(currentStep<2){currentStep++;updateSteps();} if(currentStep===2)buildWinnerSelect(); }
+function nextStep() {
+  if (currentStep===1 && newGame.participants.length===0) { showToast('Select at least one player',true); return; }
+  if (currentStep<3) { currentStep++; updateSteps(); }
+  if (currentStep===2) buildParticipantRows();
+}
 function prevStep() { if(currentStep>0){currentStep--;updateSteps();} }
-function skipPhoto() { currentPhoto=null; nextStep(); }
+function skipPhoto() { newGame.photo=null; nextStep(); }
+
+function resetPhotoZone() {
+  const z=document.getElementById('photo-zone');
+  z.innerHTML=`<div class="photo-zone-icon">⬡</div><div class="photo-zone-text"><strong>No photo selected</strong>Use the buttons above</div>`;
+  z.classList.remove('has-photo');
+}
 
 function handlePhoto(input) {
   if (!input.files||!input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    currentPhoto = e.target.result;
-    const zone = document.getElementById('photo-zone');
-    zone.innerHTML = `<img src="${currentPhoto}" alt="Board">`;
-    zone.classList.add('has-photo');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    newGame.photo=e.target.result;
+    const z=document.getElementById('photo-zone');
+    z.innerHTML=`<img src="${newGame.photo}" alt="Board">`;
+    z.classList.add('has-photo');
   };
   reader.readAsDataURL(input.files[0]);
 }
 
-function addPlayer() {
-  const list = document.getElementById('player-list');
-  const row = document.createElement('div');
-  row.className = 'player-row';
-  row.innerHTML = `<input type="text" placeholder="Player name" class="player-input"/><button class="remove-btn" onclick="this.parentElement.remove()">✕</button>`;
-  list.appendChild(row);
+// Player chips in step 1
+function renderPlayerChips() {
+  const list = document.getElementById('player-chip-list');
+  if (!list) return;
+  list.innerHTML = db.players.map(p=>{
+    const sel = newGame.participants.find(x=>x.playerId===p.id);
+    return `<div class="player-chip ${sel?'selected':''}" onclick="togglePlayer('${p.id}')">
+      <div class="color-dot" style="background:${p.preferredColor}"></div>
+      ${p.name}
+    </div>`;
+  }).join('') || `<span style="color:var(--muted);font-size:0.85rem;font-style:italic">No players yet — add one below</span>`;
 }
 
-function buildWinnerSelect() {
-  const players = getPlayers();
-  const ws = document.getElementById('winner-select');
-  ws.innerHTML = `<div class="winner-opt selected" onclick="selectWinner(this,'Unknown')"><span>🎲</span> Unknown / Not finished <span class="check">✓</span></div>`;
-  players.forEach(p => {
-    if (!p) return;
-    const div = document.createElement('div');
-    div.className = 'winner-opt';
-    div.onclick = function(){ selectWinner(this,p); };
-    div.innerHTML = `<span>👑</span> ${p} <span class="check">✓</span>`;
-    ws.appendChild(div);
-  });
+function togglePlayer(playerId) {
+  const idx = newGame.participants.findIndex(x=>x.playerId===playerId);
+  if (idx>=0) newGame.participants.splice(idx,1);
+  else newGame.participants.push({ id:uid(), playerId, victoryPoints:0, isWinner:false, hadLongestRoad:false, hadLargestArmy:false });
+  renderPlayerChips();
 }
 
-function selectWinner(el,name) {
-  document.querySelectorAll('.winner-opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected'); selectedWinner=name;
+function quickAddPlayer() {
+  const input = document.getElementById('new-player-name');
+  const name = input.value.trim();
+  if (!name) return;
+  if (db.players.find(p=>p.name.toLowerCase()===name.toLowerCase())) { showToast('Player already exists',true); return; }
+  const p = { id:uid(), name, preferredColor: COLORS[db.players.length % COLORS.length].hex, createdAt:Date.now() };
+  db.players.push(p);
+  saveDB();
+  newGame.participants.push({ id:uid(), playerId:p.id, victoryPoints:0, isWinner:false, hadLongestRoad:false, hadLargestArmy:false });
+  input.value='';
+  renderPlayerChips();
 }
-function getPlayers() { return Array.from(document.querySelectorAll('.player-input')).map(i=>i.value.trim()).filter(Boolean); }
+
+// Step 2: VP and toggles
+function buildParticipantRows() {
+  const container = document.getElementById('participant-rows');
+  container.innerHTML = newGame.participants.map(part=>{
+    const player = playerById(part.playerId);
+    if (!player) return '';
+    return `<div class="participant-row" id="prow-${part.id}">
+      <div class="participant-header">
+        <div class="participant-color" style="background:${player.preferredColor}"></div>
+        <div class="participant-name">${player.name}</div>
+        <div class="vp-control">
+          <button class="vp-btn" onclick="changeVP('${part.id}',-1)">−</button>
+          <div class="vp-value" id="vp-${part.id}">${part.victoryPoints}</div>
+          <button class="vp-btn" onclick="changeVP('${part.id}',1)">+</button>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-chip ${part.isWinner?'on':''}" onclick="toggleField('${part.id}','isWinner')">👑 Winner</div>
+        <div class="toggle-chip ${part.hadLongestRoad?'on':''}" onclick="toggleField('${part.id}','hadLongestRoad')">🛤 Longest Road</div>
+        <div class="toggle-chip ${part.hadLargestArmy?'on':''}" onclick="toggleField('${part.id}','hadLargestArmy')">⚔️ Largest Army</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function changeVP(partId, delta) {
+  const part = newGame.participants.find(p=>p.id===partId);
+  if (!part) return;
+  part.victoryPoints = Math.max(0, part.victoryPoints + delta);
+  const el = document.getElementById(`vp-${partId}`);
+  if (el) el.textContent = part.victoryPoints;
+}
+
+function toggleField(partId, field) {
+  const part = newGame.participants.find(p=>p.id===partId);
+  if (!part) return;
+  // Winner is exclusive
+  if (field==='isWinner') {
+    newGame.participants.forEach(p=>p.isWinner=false);
+    part.isWinner=true;
+  } else {
+    part[field] = !part[field];
+  }
+  buildParticipantRows();
+}
 
 function saveGame() {
-  const players = getPlayers();
-  if (!players.length) { showToast('Add at least one player!',true); prevStep(); return; }
-  const game = { id:Date.now(), date:document.getElementById('game-date').value||new Date().toISOString().split('T')[0], players, winner:selectedWinner, photo:currentPhoto, boardAnalysis:null };
-  games.unshift(game); saveGames();
+  if (newGame.participants.length===0) { showToast('Add at least one player',true); return; }
+  const game = {
+    id: uid(),
+    date: document.getElementById('game-date').value || new Date().toISOString().split('T')[0],
+    photo: newGame.photo,
+    boardAnalysis: null,
+    expansion: document.getElementById('game-expansion').value,
+    notes: document.getElementById('game-notes').value.trim(),
+    participants: newGame.participants,
+    createdAt: Date.now()
+  };
+  db.games.unshift(game);
+  saveDB();
   showToast('Session saved! 🎉');
   setTimeout(()=>showScreen('screen-home'),1200);
 }
 
-// ── Render lists ──
+// ══════════════════════════════════════════
+// RENDER HOME
+// ══════════════════════════════════════════
 function renderHome() {
-  document.getElementById('home-subtitle').textContent = games.length ? `${games.length} session${games.length!==1?'s':''} recorded` : 'No sessions recorded yet';
+  const n = db.games.length;
+  document.getElementById('home-subtitle').textContent = n ? `${n} session${n!==1?'s':''} recorded` : 'No sessions recorded yet';
   const list = document.getElementById('game-list');
-  list.innerHTML = games.length ? games.slice(0,5).map(gameCardHTML).join('') : `<div class="empty-state"><div class="empty-icon">🎲</div><p>Your logged games will appear here.<br>Start by capturing a board!</p></div>`;
+  list.innerHTML = n ? db.games.slice(0,5).map(gameCardHTML).join('') : `<div class="empty-state"><div class="empty-icon">🎲</div><p>Your logged games will appear here.</p></div>`;
 }
+
+// ══════════════════════════════════════════
+// RENDER HISTORY
+// ══════════════════════════════════════════
 function renderHistory() {
-  document.getElementById('history-list').innerHTML = games.length ? games.map(gameCardHTML).join('') : `<div class="empty-state"><div class="empty-icon">📜</div><p>No games recorded yet.</p></div>`;
+  document.getElementById('history-list').innerHTML = db.games.length ? db.games.map(gameCardHTML).join('') : `<div class="empty-state"><div class="empty-icon">📜</div><p>No games recorded yet.</p></div>`;
 }
+
 function gameCardHTML(g) {
-  return `<div class="game-card" onclick="showDetail(${g.id})">
-    ${g.photo?`<img class="game-card-thumb" src="${g.photo}" alt="Board">`:`<div class="game-card-hex">⬡</div>`}
-    <div class="game-card-info"><h4>${formatDate(g.date)}</h4><p>${g.players.join(', ')}</p></div>
-    ${g.boardAnalysis?`<span class="ai-badge">🤖 AI</span>`:''}
-    ${g.winner!=='Unknown'?`<span class="game-card-winner">👑 ${g.winner}</span>`:''}
+  const winner = g.participants.find(p=>p.isWinner);
+  const winnerPlayer = winner ? playerById(winner.playerId) : null;
+  const names = g.participants.map(p=>playerById(p.playerId)?.name||'?').join(', ');
+  return `<div class="card" onclick="showDetail('${g.id}')">
+    ${g.photo?`<img class="game-thumb" src="${g.photo}" alt="Board">`:`<div class="game-hex">⬡</div>`}
+    <div class="card-info"><h4>${formatDate(g.date)}</h4><p>${names}</p></div>
+    ${g.boardAnalysis?`<span class="badge badge-blue">🤖</span>`:''}
+    ${winnerPlayer?`<span class="badge badge-green">👑 ${winnerPlayer.name}</span>`:''}
   </div>`;
 }
 
-// ── Detail ──
+// ══════════════════════════════════════════
+// DETAIL
+// ══════════════════════════════════════════
 function showDetail(id) {
-  const game = games.find(g=>g.id===id);
+  const game = db.games.find(g=>g.id===id);
   if (!game) return;
   prevScreen = document.querySelector('.screen.active').id;
   renderDetail(game);
@@ -433,205 +727,287 @@ function showDetail(id) {
 
 function renderDetail(game) {
   const apiKey = localStorage.getItem('catan-api-key');
-  let analysisSection = '';
 
-  if (game.boardAnalysis) {
-    analysisSection = `<div class="detail-section"><h3>Board Analysis</h3>${renderHexGrid(game.boardAnalysis)}${game.boardAnalysis.summary?`<div class="analysis-summary">${game.boardAnalysis.summary}</div>`:''}</div>`;
-  } else if (game.photo) {
-    analysisSection = `<div class="detail-section"><h3>Board Analysis</h3>
-      ${!apiKey?`<div class="warn-notice">⚠️ Configure your API key in Settings to enable AI analysis.</div>`:''}
-      <button class="analyse-btn" id="analyse-btn" onclick="analyseBoard(${game.id})" ${!apiKey?'disabled':''}>🤖 Analyse Board with AI</button>
+  // Participants table
+  const sorted = [...game.participants].sort((a,b)=>b.victoryPoints-a.victoryPoints);
+  const participantRows = sorted.map(part=>{
+    const p = playerById(part.playerId);
+    if (!p) return '';
+    const badges = [];
+    if (part.hadLongestRoad) badges.push('<span class="result-badge">🛤 Road</span>');
+    if (part.hadLargestArmy) badges.push('<span class="result-badge">⚔️ Army</span>');
+    return `<div class="result-row">
+      <div class="result-color" style="background:${p.preferredColor}"></div>
+      <div class="result-name">${p.name} ${part.isWinner?'👑':''}</div>
+      ${part.victoryPoints>0?`<div class="result-vp">${part.victoryPoints} VP</div>`:''}
+      <div class="result-badges">${badges.join('')}</div>
     </div>`;
-  } else {
-    analysisSection = `<div class="detail-section"><h3>Board Analysis</h3><div style="background:var(--surface);border-radius:10px;padding:20px;text-align:center;border:1px dashed #c9933a33"><p style="color:var(--muted);font-size:0.85rem;font-style:italic">No photo — add one to enable AI analysis</p></div></div>`;
+  }).join('');
+
+  // Analysis section
+  let analysisSection='';
+  if (game.boardAnalysis) {
+    analysisSection=`<div class="detail-section"><h3>Board Analysis</h3>${renderHexGrid(game.boardAnalysis)}${game.boardAnalysis.summary?`<div class="analysis-summary">${game.boardAnalysis.summary}</div>`:''}</div>`;
+  } else if (game.photo) {
+    analysisSection=`<div class="detail-section"><h3>Board Analysis</h3>${!apiKey?`<div class="warn-notice">⚠️ Configure your API key in Settings to enable AI analysis.</div>`:''}
+      <button class="analyse-btn" id="analyse-btn" onclick="analyseBoard('${game.id}')" ${!apiKey?'disabled':''}>🤖 Analyse Board with AI</button></div>`;
   }
 
-  document.getElementById('detail-content').innerHTML = `
+  const expansionNames={base:'Base Game',seafarers:'Seafarers',cities:'Cities & Knights',traders:'Traders & Barbarians',explorers:'Explorers & Pirates'};
+
+  document.getElementById('detail-content').innerHTML=`
     ${game.photo?`<img class="detail-photo" src="${game.photo}" alt="Board">`:`<div class="detail-photo-placeholder">⬡</div>`}
     <div class="detail-meta">
       <span class="meta-chip">📅 ${formatDate(game.date)}</span>
-      <span class="meta-chip">👥 ${game.players.length} players</span>
-      ${game.boardAnalysis?`<span class="meta-chip" style="color:#a8c8f0">🤖 AI analysed</span>`:''}
+      <span class="meta-chip">👥 ${game.participants.length}</span>
+      <span class="meta-chip">🎲 ${expansionNames[game.expansion]||game.expansion}</span>
+      ${game.boardAnalysis?`<span class="meta-chip" style="color:#a8c8f0">🤖 AI</span>`:''}
     </div>
     <div class="detail-section">
-      <h3>Players &amp; Result</h3>
-      ${game.players.map(p=>`<div class="player-result"><span class="name">${p}</span>${game.winner===p?'<span>👑</span>':''}</div>`).join('')}
-      ${game.winner==='Unknown'?`<p style="color:var(--muted);font-style:italic;font-size:0.85rem;margin-top:8px">No winner recorded</p>`:''}
+      <h3>Results</h3>${participantRows}
     </div>
+    ${game.notes?`<div class="detail-section"><h3>Notes</h3><div class="notes-box">${game.notes}</div></div>`:''}
     ${analysisSection}
-    <button class="btn-secondary" onclick="deleteGame(${game.id})" style="margin-top:8px;border-color:#b84c3a44;color:var(--red)">Delete Session</button>
+    <button class="btn-secondary" onclick="deleteGame('${game.id}')" style="border-color:#b84c3a44;color:var(--red);margin-top:4px">Delete Session</button>
     <div style="height:24px"></div>`;
 }
 
-// ── AI Analysis ──
+// ══════════════════════════════════════════
+// PLAYERS SCREEN
+// ══════════════════════════════════════════
+function renderPlayers() {
+  const el = document.getElementById('player-list-screen');
+  if (!db.players.length) {
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">👥</div><p>No players yet.<br>Tap + New to add your group.</p></div>`;
+    return;
+  }
+  el.innerHTML = db.players.map(p=>{
+    const gamesPlayed = db.games.filter(g=>g.participants.some(x=>x.playerId===p.id)).length;
+    const wins = db.games.filter(g=>g.participants.some(x=>x.playerId===p.id&&x.isWinner)).length;
+    const initials = p.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="player-card" onclick="showAddPlayerModal('${p.id}')">
+      <div class="player-avatar" style="background:${p.preferredColor}22;border-color:${p.preferredColor}66;color:${p.preferredColor}">${initials}</div>
+      <div class="player-card-info">
+        <h4>${p.name}</h4>
+        <p>${gamesPlayed} game${gamesPlayed!==1?'s':''} · ${wins} win${wins!==1?'s':''}</p>
+      </div>
+      <span style="color:var(--muted);font-size:1rem">›</span>
+    </div>`;
+  }).join('');
+}
+
+function showAddPlayerModal(playerId=null) {
+  editingPlayerId = playerId;
+  const p = playerId ? db.players.find(x=>x.id===playerId) : null;
+  document.getElementById('player-modal-title').textContent = p ? 'Edit Player' : 'New Player';
+  document.getElementById('pm-name').value = p ? p.name : '';
+  const selectedColor = p ? p.preferredColor : COLORS[db.players.length%COLORS.length].hex;
+  document.getElementById('pm-color-picker').innerHTML = COLORS.map(c=>`<div class="color-swatch ${c.hex===selectedColor?'selected':''}" style="background:${c.hex}" onclick="selectModalColor('${c.hex}')"></div>`).join('');
+  document.getElementById('player-modal').classList.add('show');
+  setTimeout(()=>document.getElementById('pm-name').focus(),100);
+}
+
+function selectModalColor(hex) {
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('selected', s.style.background===hex||s.style.backgroundColor===hex));
+}
+
+function closePlayerModal() { document.getElementById('player-modal').classList.remove('show'); editingPlayerId=null; }
+
+function savePlayerModal() {
+  const name = document.getElementById('pm-name').value.trim();
+  if (!name) { showToast('Enter a name',true); return; }
+  const selectedSwatch = document.querySelector('.color-swatch.selected');
+  const color = selectedSwatch ? (selectedSwatch.style.backgroundColor||selectedSwatch.style.background) : COLORS[0].hex;
+  // Normalise colour value
+  const colorHex = rgbToHex(color) || COLORS[0].hex;
+
+  if (editingPlayerId) {
+    const p = db.players.find(x=>x.id===editingPlayerId);
+    if (p) { p.name=name; p.preferredColor=colorHex; }
+  } else {
+    if (db.players.find(p=>p.name.toLowerCase()===name.toLowerCase())) { showToast('Player already exists',true); return; }
+    db.players.push({ id:uid(), name, preferredColor:colorHex, createdAt:Date.now() });
+  }
+  saveDB(); closePlayerModal(); renderPlayers(); showToast(editingPlayerId?'Player updated':'Player added ✓');
+}
+
+function rgbToHex(rgb) {
+  if (!rgb) return null;
+  if (rgb.startsWith('#')) return rgb;
+  const m = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  if (!m) return rgb;
+  return '#'+[m[1],m[2],m[3]].map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');
+}
+
+// ══════════════════════════════════════════
+// STATS
+// ══════════════════════════════════════════
+function renderStats() {
+  const el = document.getElementById('stats-content');
+  if (!db.players.length || !db.games.length) {
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📊</div><p>Play some games to see stats here.</p></div>`;
+    return;
+  }
+
+  const statCards = db.players.map(p=>{
+    const participated = db.games.filter(g=>g.participants.some(x=>x.playerId===p.id));
+    const wins = participated.filter(g=>g.participants.some(x=>x.playerId===p.id&&x.isWinner)).length;
+    const allVP = participated.map(g=>{const part=g.participants.find(x=>x.playerId===p.id);return part?part.victoryPoints:0;});
+    const avgVP = allVP.length ? (allVP.reduce((a,b)=>a+b,0)/allVP.length).toFixed(1) : '—';
+    const longestRoads = participated.filter(g=>g.participants.some(x=>x.playerId===p.id&&x.hadLongestRoad)).length;
+    const largestArmies = participated.filter(g=>g.participants.some(x=>x.playerId===p.id&&x.hadLargestArmy)).length;
+    const winRate = participated.length ? Math.round(wins/participated.length*100) : 0;
+    const initials = p.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+
+    return `<div class="stat-card">
+      <div class="stat-card-header">
+        <div class="stat-avatar" style="background:${p.preferredColor}22;border:2px solid ${p.preferredColor}66;color:${p.preferredColor}">${initials}</div>
+        <div><div class="stat-player-name">${p.name}</div><div class="stat-player-sub">${participated.length} game${participated.length!==1?'s':''} played</div></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-item"><span class="stat-value">${wins}</span><span class="stat-label">Wins</span></div>
+        <div class="stat-item"><span class="stat-value">${avgVP}</span><span class="stat-label">Avg VP</span></div>
+        <div class="stat-item"><span class="stat-value">${longestRoads+largestArmies}</span><span class="stat-label">Specials</span></div>
+      </div>
+      <div class="win-bar-wrap">
+        <div class="win-bar-label"><span>Win rate</span><span>${winRate}%</span></div>
+        <div class="win-bar-bg"><div class="win-bar-fill" style="width:${winRate}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = statCards;
+}
+
+// ══════════════════════════════════════════
+// AI ANALYSIS (carried over from Sprint 2)
+// ══════════════════════════════════════════
 async function analyseBoard(gameId) {
   const apiKey = localStorage.getItem('catan-api-key');
   if (!apiKey) { showToast('Set API key in Settings first',true); return; }
-  const game = games.find(g=>g.id===gameId);
+  const game = db.games.find(g=>g.id===gameId);
   if (!game||!game.photo) return;
 
-  // Show loading
   const btn = document.getElementById('analyse-btn');
-  if (btn) { btn.disabled=true; btn.innerHTML=`<div style="width:18px;height:18px;border:2px solid #3a5f8a33;border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite"></div> Analysing…`; }
+  if (btn) { btn.disabled=true; btn.innerHTML=`<div style="width:18px;height:18px;border:2px solid #3a5f8a33;border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;margin-right:8px"></div>Analysing…`; }
   const section = document.querySelector('#detail-content .detail-section:last-of-type');
-  if (section) section.innerHTML = `<h3>Board Analysis</h3><div class="analysis-loading"><div class="spinner"></div><p>Claude is reading your board…<br>This usually takes 15–30 seconds</p></div>`;
+  if (section) section.innerHTML=`<h3>Board Analysis</h3><div class="analysis-loading"><div class="spinner"></div><p>Claude is reading your board…<br>Usually 15–30 seconds</p></div>`;
 
   try {
-    const base64 = game.photo.split(',')[1];
-    const mediaType = game.photo.match(/data:([^;]+);/)[1];
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const base64=game.photo.split(',')[1];
+    const mediaType=game.photo.match(/data:([^;]+);/)[1];
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1500,
-        messages:[{
-          role:'user',
-          content:[
-            { type:'image', source:{ type:'base64', media_type:mediaType, data:base64 } },
-            { type:'text', text:`You are analysing a Catan board photograph. A standard Catan board has 19 hexagonal land tiles in rows of 3-4-5-4-3, plus surrounding sea tiles.
-
-Tile types by appearance:
-- wood: dark green forest
-- brick: red/brown hills  
-- wheat: golden yellow fields
-- sheep: light green pasture
-- ore: dark grey mountains
-- desert: sandy/tan, NO number token
-
-Number tokens 2-12 appear on all non-desert tiles (6 and 8 are usually red).
-
-Respond ONLY with this JSON, no other text:
-{
-  "tiles": [
-    {"row":0,"col":0,"type":"wood","number":5,"confident":true},
-    ... 19 tiles total, left-to-right top-to-bottom
-  ],
-  "summary": "One sentence about notable board features",
-  "overallConfidence": "high|medium|low",
-  "uncertainTiles": 0
-}
-
-Use "unknown" type and confident:false when unsure. Set number to null for desert or unreadable tokens.` }
-          ]
-        }]
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:1500,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:mediaType,data:base64}},
+          {type:'text',text:`Analyse this Catan board. 19 hex land tiles in rows of 3-4-5-4-3. Types: wood (dark green), brick (red-brown), wheat (yellow), sheep (light green), ore (dark grey), desert (sandy, no number). Numbers 2-12 on all non-desert tiles (6 and 8 usually red).
+Respond ONLY with JSON, no other text:
+{"tiles":[{"row":0,"col":0,"type":"wood","number":5,"confident":true}],"summary":"One sentence about notable features","overallConfidence":"high|medium|low","uncertainTiles":0}`}
+        ]}]
       })
     });
-
-    if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||`API error ${res.status}`); }
-    const data = await res.json();
-    const text = data.content.map(c=>c.text||'').join('');
-    const clean = text.replace(/```json|```/g,'').trim();
-    const analysis = JSON.parse(clean);
-    game.boardAnalysis = analysis;
-    saveGames();
+    if (!res.ok){const e=await res.json();throw new Error(e.error?.message||`API error ${res.status}`);}
+    const data=await res.json();
+    const text=data.content.map(c=>c.text||'').join('');
+    const analysis=JSON.parse(text.replace(/```json|```/g,'').trim());
+    game.boardAnalysis=analysis;
+    saveDB();
     showToast('Board analysed! 🤖');
     renderDetail(game);
-
   } catch(err) {
     console.error(err);
-    showToast('Analysis failed: '+err.message, true);
+    showToast('Analysis failed: '+err.message,true);
     renderDetail(game);
   }
 }
 
-// ── Hex Grid ──
 function renderHexGrid(analysis) {
   if (!analysis||!analysis.tiles) return '';
-  const R=26, tiles=analysis.tiles;
-  const H=Math.sqrt(3)*R;
-  const svgW=310, svgH=250, cx=svgW/2, startY=34;
+  const R=25,tiles=analysis.tiles,H=Math.sqrt(3)*R,svgW=300,svgH=240,cx=svgW/2,startY=32;
   const rowConfig=[3,4,5,4,3];
-  let tileIdx=0, hexes='';
-
-  rowConfig.forEach((count,rowIdx) => {
-    const totalW = count*R*1.5 + R*0.5;
-    const startX = cx - totalW/2 + R;
-    const y = startY + rowIdx*H;
-    for(let col=0;col<count;col++) {
-      const tile = tiles[tileIdx]||{type:'unknown',number:null,confident:false};
-      hexes += makeHex(startX + col*R*1.72, y, R, tile);
+  let tileIdx=0,hexes='';
+  rowConfig.forEach((count,rowIdx)=>{
+    const totalW=count*R*1.5+R*0.5,startX=cx-totalW/2+R,y=startY+rowIdx*H;
+    for(let col=0;col<count;col++){
+      hexes+=makeHex(startX+col*R*1.72,y,R,tiles[tileIdx]||{type:'unknown',number:null,confident:false});
       tileIdx++;
     }
   });
-
-  const conf = analysis.overallConfidence||'';
-  const confColor = conf==='high'?'#4a7c59':conf==='medium'?'#c9933a':'#b84c3a';
-  const uncertain = analysis.uncertainTiles||0;
-
+  const conf=analysis.overallConfidence||'',confColor=conf==='high'?'#4a7c59':conf==='medium'?'#c9933a':'#b84c3a';
+  const unc=analysis.uncertainTiles||0;
   return `<div class="hex-grid-container">
     <div class="hex-grid-title"><span>Identified Board</span><span style="color:${confColor};font-size:0.65rem">${conf.toUpperCase()} CONFIDENCE</span></div>
     <svg class="hex-svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}">${hexes}</svg>
-    ${uncertain>0?`<div style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:0.75rem;color:var(--gold-lt)">⚠️ ${uncertain} tile${uncertain!==1?'s':''} flagged uncertain (dashed border)</div>`:''}
-    <div class="legend">
-      ${[['wood','#2d5a1b'],['brick','#8b3a2a'],['wheat','#c4952a'],['sheep','#5a8f3c'],['ore','#4a4a5a'],['desert','#c4a84a']].map(([n,c])=>`<div class="legend-item"><div class="legend-swatch" style="background:${c}"></div>${n}</div>`).join('')}
-    </div>
+    ${unc>0?`<div style="font-size:0.75rem;color:var(--gold-lt);margin-top:8px">⚠️ ${unc} tile${unc!==1?'s':''} uncertain (dashed)</div>`:''}
+    <div class="legend">${[['wood','#2d5a1b'],['brick','#8b3a2a'],['wheat','#c4952a'],['sheep','#5a8f3c'],['ore','#4a4a5a'],['desert','#c4a84a']].map(([n,c])=>`<div class="legend-item"><div class="legend-swatch" style="background:${c}"></div>${n}</div>`).join('')}</div>
   </div>`;
 }
 
 function makeHex(cx,cy,r,tile) {
-  const pts = Array.from({length:6},(_,i)=>{const a=Math.PI/180*(60*i-30);return`${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`;}).join(' ');
-  const colors = {wood:'#2d5a1b',brick:'#8b3a2a',wheat:'#c4952a',sheep:'#5a8f3c',ore:'#4a4a5a',desert:'#c4a84a',unknown:'#2a2a2a'};
-  const fill = colors[tile.type]||'#2a2a2a';
-  const stroke = tile.confident===false ? 'stroke:#e8b86d;stroke-width:2;stroke-dasharray:4,2' : 'stroke:#c9933a44;stroke-width:1.5';
-  const names = {wood:'WD',brick:'BR',wheat:'WH',sheep:'SH',ore:'OR',desert:'DS',unknown:'?'};
-  const numColor = (tile.number===6||tile.number===8)?'#ff8060':'#ede0c4';
+  const pts=Array.from({length:6},(_,i)=>{const a=Math.PI/180*(60*i-30);return`${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`;}).join(' ');
+  const colors={wood:'#2d5a1b',brick:'#8b3a2a',wheat:'#c4952a',sheep:'#5a8f3c',ore:'#4a4a5a',desert:'#c4a84a',unknown:'#2a2a2a'};
+  const fill=colors[tile.type]||'#2a2a2a';
+  const stroke=tile.confident===false?'stroke:#e8b86d;stroke-width:2;stroke-dasharray:4,2':'stroke:#c9933a44;stroke-width:1.5';
+  const names={wood:'WD',brick:'BR',wheat:'WH',sheep:'SH',ore:'OR',desert:'DS',unknown:'?'};
+  const numColor=(tile.number===6||tile.number===8)?'#ff8060':'#ede0c4';
   return `<polygon points="${pts}" fill="${fill}" style="${stroke}"/>
-    <text x="${cx}" y="${cy-5}" style="font-family:Cinzel,serif;font-size:8px;fill:rgba(255,255,255,0.65);text-anchor:middle">${names[tile.type]||'?'}</text>
+    <text x="${cx}" y="${cy-4}" style="font-family:Cinzel,serif;font-size:7.5px;fill:rgba(255,255,255,0.6);text-anchor:middle">${names[tile.type]||'?'}</text>
     ${tile.number?`<text x="${cx}" y="${cy+9}" style="font-family:Cinzel,serif;font-size:11px;font-weight:700;fill:${numColor};text-anchor:middle">${tile.number}</text>`:''}
-    ${tile.confident===false?`<text x="${cx}" y="${cy+20}" style="font-size:9px;text-anchor:middle">⚠</text>`:''}`;
+    ${tile.confident===false?`<text x="${cx}" y="${cy+19}" style="font-size:8px;text-anchor:middle">⚠</text>`:''}`;
 }
 
-// ── API Key ──
-function showApiModal() {
-  document.getElementById('api-key-input').value = localStorage.getItem('catan-api-key')?'••••••••••••••':'';
+// ══════════════════════════════════════════
+// SETTINGS & API KEY
+// ══════════════════════════════════════════
+function renderSettings() {
+  const apiKey=localStorage.getItem('catan-api-key');
+  const el=document.getElementById('key-status-display');
+  if(el){el.className=`key-status ${apiKey?'set':'missing'}`;el.textContent=apiKey?'● Configured':'● Not configured';}
+  const s=document.getElementById('setting-sessions');if(s)s.textContent=db.games.length;
+  const pl=document.getElementById('setting-players');if(pl)pl.textContent=db.players.length;
+}
+
+function showApiModal(){
+  document.getElementById('api-key-input').value=localStorage.getItem('catan-api-key')?'••••••••••':'';
   document.getElementById('api-modal').classList.add('show');
 }
-function closeApiModal() { document.getElementById('api-modal').classList.remove('show'); }
-function saveApiKey() {
-  const val = document.getElementById('api-key-input').value.trim();
-  if (!val||val.includes('•')) { closeApiModal(); return; }
-  if (!val.startsWith('sk-')) { showToast('Key should start with sk-',true); return; }
+function saveApiKey(){
+  const val=document.getElementById('api-key-input').value.trim();
+  if(!val||val.includes('•')){document.getElementById('api-modal').classList.remove('show');return;}
+  if(!val.startsWith('sk-')){showToast('Key should start with sk-',true);return;}
   localStorage.setItem('catan-api-key',val);
-  closeApiModal(); renderSettings(); showToast('API key saved ✓');
+  document.getElementById('api-modal').classList.remove('show');
+  renderSettings();showToast('API key saved ✓');
 }
 
-// ── Settings ──
-function renderSettings() {
-  const apiKey = localStorage.getItem('catan-api-key');
-  const el = document.getElementById('key-status-display');
-  if (el) { el.className=`key-status ${apiKey?'set':'missing'}`; el.textContent=apiKey?'● Configured':'● Not configured'; }
-  const c = document.getElementById('session-count-setting');
-  if (c) c.textContent = games.length;
+function clearAllData(){
+  if(!confirm('Delete all sessions and players? This cannot be undone.'))return;
+  db={players:[],games:[]};saveDB();showToast('All data cleared');renderSettings();renderHome();
 }
 
-function clearAllData() {
-  if (!confirm('Delete all sessions? This cannot be undone.')) return;
-  games=[]; saveGames(); showToast('All data cleared'); renderSettings();
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function deleteGame(id){
+  if(!confirm('Delete this session?'))return;
+  db.games=db.games.filter(g=>g.id!==id);saveDB();showToast('Session deleted');showScreen(prevScreen);
 }
 
-// ── Helpers ──
-function saveGames() { localStorage.setItem('catan-games',JSON.stringify(games)); }
-function deleteGame(id) {
-  if (!confirm('Delete this session?')) return;
-  games=games.filter(g=>g.id!==id); saveGames(); showToast('Session deleted'); showScreen(prevScreen);
-}
-function formatDate(str) {
-  if (!str) return 'Unknown date';
+function formatDate(str){
+  if(!str)return'Unknown date';
   return new Date(str+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 }
-function showToast(msg,isError=false) {
+
+function showToast(msg,isError=false){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className=`toast${isError?' error':''} show`;
+  t.textContent=msg;t.className=`toast${isError?' error':''} show`;
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
+// ── Init ──
 renderHome();
 </script>
 </body>
