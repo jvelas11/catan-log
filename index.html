@@ -12,365 +12,168 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg:        #0f0d08;
-      --surface:   #1c1810;
-      --surface2:  #261f14;
-      --gold:      #c9933a;
-      --gold-lt:   #e8b86d;
-      --sand:      #d4b483;
-      --text:      #ede0c4;
-      --muted:     #7a6a52;
-      --red:       #b84c3a;
-      --green:     #4a7c59;
-      --blue:      #3a5f8a;
-      --radius:    14px;
+      --bg:#0f0d08;--surface:#1c1810;--surface2:#261f14;
+      --gold:#c9933a;--gold-lt:#e8b86d;--sand:#d4b483;
+      --text:#ede0c4;--muted:#7a6a52;--red:#b84c3a;--green:#4a7c59;--blue:#3a5f8a;
+      --radius:14px;
     }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,#3d2a0a22,transparent);pointer-events:none;z-index:0;}
+    .screen{display:none;flex-direction:column;min-height:100vh;position:relative;z-index:1;}
+    .screen.active{display:flex;}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    header{padding:20px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #c9933a22;flex-shrink:0;}
+    header h1{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:700;letter-spacing:0.08em;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .back-btn{background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer;padding:4px 8px;}
+    .header-action{background:none;border:none;color:var(--muted);font-size:0.7rem;font-family:'Cinzel',serif;letter-spacing:0.1em;cursor:pointer;padding:4px 8px;}
+    .header-action:hover{color:var(--gold);}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Crimson Pro', Georgia, serif;
-      min-height: 100vh;
-      max-width: 480px;
-      margin: 0 auto;
-      overflow-x: hidden;
-    }
+    .bottom-nav{display:flex;border-top:1px solid #c9933a22;background:var(--surface);position:sticky;bottom:0;flex-shrink:0;}
+    .nav-btn{flex:1;background:none;border:none;color:var(--muted);padding:14px 8px 10px;cursor:pointer;font-family:'Crimson Pro',serif;font-size:0.7rem;letter-spacing:0.08em;display:flex;flex-direction:column;align-items:center;gap:4px;transition:color 0.2s;text-transform:uppercase;}
+    .nav-btn .nav-icon{font-size:1.3rem;}
+    .nav-btn.active{color:var(--gold);}
 
-    /* ── Background texture ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% -10%, #3d2a0a22, transparent),
-        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9933a' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
+    /* Home */
+    .hero{padding:32px 24px 16px;text-align:center;}
+    .hex-logo{width:80px;height:80px;margin:0 auto 16px;animation:float 4s ease-in-out infinite;}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    .hero h2{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:400;color:var(--sand);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:6px;}
+    .hero p{color:var(--muted);font-size:1rem;font-style:italic;}
+    .main-action{margin:24px 20px;background:linear-gradient(135deg,#2a1f0e,#1c1508);border:1px solid var(--gold);border-radius:var(--radius);padding:24px;cursor:pointer;display:flex;align-items:center;gap:16px;box-shadow:0 4px 24px #c9933a18;position:relative;overflow:hidden;}
+    .main-action::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#c9933a12,transparent);opacity:0;transition:opacity 0.2s;}
+    .main-action:hover::before{opacity:1;}
+    .main-action:active{transform:scale(0.98);}
+    .main-action-icon{font-size:2.2rem;line-height:1;}
+    .main-action-text h3{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold-lt);margin-bottom:4px;}
+    .main-action-text p{color:var(--muted);font-size:0.85rem;}
+    .section-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:0 20px 10px;}
+    .game-list{padding:0 20px;flex:1;}
+    .empty-state{text-align:center;padding:48px 20px;color:var(--muted);font-style:italic;}
+    .empty-state .empty-icon{font-size:2.5rem;margin-bottom:12px;opacity:0.4;}
+    .game-card{background:var(--surface);border:1px solid #c9933a1a;border-radius:var(--radius);padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color 0.2s,transform 0.15s;display:flex;align-items:center;gap:14px;}
+    .game-card:hover{border-color:#c9933a44;}
+    .game-card:active{transform:scale(0.99);}
+    .game-card-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+    .game-card-hex{font-size:1.8rem;flex-shrink:0;width:48px;text-align:center;}
+    .game-card-info{flex:1;min-width:0;}
+    .game-card-info h4{font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold-lt);margin-bottom:3px;}
+    .game-card-info p{color:var(--muted);font-size:0.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .game-card-winner{font-size:0.75rem;color:var(--green);background:#4a7c5918;border:1px solid #4a7c5933;border-radius:20px;padding:3px 10px;font-family:'Cinzel',serif;white-space:nowrap;}
+    .ai-badge{font-size:0.65rem;color:#a8c8f0;background:#3a5f8a18;border:1px solid #3a5f8a33;border-radius:20px;padding:2px 8px;font-family:'Cinzel',serif;}
 
-    /* ── Screens ── */
-    .screen { display: none; flex-direction: column; min-height: 100vh; position: relative; z-index: 1; }
-    .screen.active { display: flex; }
+    /* New Game */
+    .new-game-content{flex:1;padding:20px;overflow-y:auto;}
+    .step-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:28px;}
+    .step-dot{width:8px;height:8px;border-radius:50%;background:var(--surface2);transition:background 0.3s;}
+    .step-dot.active{background:var(--gold);}
+    .step-dot.done{background:var(--green);}
+    .step{display:none;animation:fadeIn 0.3s ease;}
+    .step.active{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .step-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-lt);margin-bottom:6px;}
+    .step-sub{color:var(--muted);font-size:0.9rem;margin-bottom:24px;font-style:italic;}
+    .photo-options{display:flex;gap:10px;margin-bottom:16px;}
+    .photo-opt-btn{flex:1;background:var(--surface);border:1px solid #c9933a33;border-radius:10px;padding:12px;cursor:pointer;color:var(--sand);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.05em;display:flex;flex-direction:column;align-items:center;gap:6px;transition:border-color 0.2s,background 0.2s;}
+    .photo-opt-btn:hover{border-color:var(--gold);background:var(--surface2);}
+    .photo-opt-btn .opt-icon{font-size:1.5rem;}
+    .photo-zone{border:2px dashed #c9933a44;border-radius:var(--radius);padding:40px 20px;text-align:center;background:var(--surface);margin-bottom:16px;transition:border-color 0.2s;}
+    .photo-zone.has-photo{padding:0;border-style:solid;}
+    .photo-zone img{width:100%;border-radius:12px;display:block;}
+    .photo-zone-icon{font-size:2.5rem;margin-bottom:12px;}
+    .photo-zone-text{color:var(--muted);font-size:0.9rem;}
+    .photo-zone-text strong{color:var(--sand);display:block;font-size:1rem;margin-bottom:4px;}
+    .field{margin-bottom:18px;}
+    .field label{display:block;font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+    .field input{width:100%;background:var(--surface);border:1px solid #c9933a33;border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Crimson Pro',serif;font-size:1rem;outline:none;transition:border-color 0.2s;}
+    .field input:focus{border-color:var(--gold);}
+    .field input::placeholder{color:var(--muted);}
+    .player-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+    .player-row{display:flex;gap:8px;align-items:center;}
+    .player-row input{flex:1;}
+    .remove-btn{background:none;border:1px solid #b84c3a44;border-radius:8px;color:var(--red);width:36px;height:44px;cursor:pointer;font-size:1rem;flex-shrink:0;}
+    .add-player-btn{background:none;border:1px dashed #c9933a44;border-radius:10px;padding:10px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.1em;cursor:pointer;width:100%;}
+    .winner-select{display:flex;flex-direction:column;gap:8px;}
+    .winner-opt{background:var(--surface);border:1px solid #c9933a22;border-radius:10px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color 0.2s;color:var(--text);font-size:0.95rem;}
+    .winner-opt.selected{border-color:var(--green);background:#4a7c5910;}
+    .winner-opt .check{color:var(--green);margin-left:auto;opacity:0;}
+    .winner-opt.selected .check{opacity:1;}
+    .btn-primary{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),#a0712a);border:none;border-radius:var(--radius);color:#1a1208;font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;margin-top:8px;text-transform:uppercase;transition:opacity 0.2s,transform 0.15s;}
+    .btn-primary:active{transform:scale(0.98);opacity:0.9;}
+    .btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+    .btn-secondary{width:100%;padding:13px;background:none;border:1px solid #c9933a44;border-radius:var(--radius);color:var(--gold);font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.08em;cursor:pointer;margin-top:8px;}
 
-    /* ── Header ── */
-    header {
-      padding: 20px 20px 12px;
-      display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid #c9933a22;
-    }
-    header h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      background: linear-gradient(135deg, var(--gold-lt), var(--gold));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .back-btn {
-      background: none; border: none; color: var(--gold); font-size: 1.5rem;
-      cursor: pointer; padding: 4px 8px; line-height: 1;
-    }
+    /* Detail */
+    .detail-content{flex:1;padding:20px;overflow-y:auto;}
+    .detail-photo{width:100%;border-radius:var(--radius);margin-bottom:20px;}
+    .detail-photo-placeholder{width:100%;aspect-ratio:4/3;background:var(--surface2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:20px;border:1px solid #c9933a1a;}
+    .detail-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
+    .meta-chip{background:var(--surface2);border:1px solid #c9933a22;border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--sand);display:flex;align-items:center;gap:6px;}
+    .detail-section{margin-bottom:20px;}
+    .detail-section h3{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+    .player-result{display:flex;align-items:center;background:var(--surface);border:1px solid #c9933a1a;border-radius:10px;padding:12px 16px;margin-bottom:8px;}
+    .player-result .name{flex:1;font-size:0.95rem;}
 
-    /* ── Home screen ── */
-    .hero {
-      padding: 32px 24px 16px;
-      text-align: center;
-    }
-    .hex-logo {
-      width: 80px; height: 80px; margin: 0 auto 16px;
-      animation: float 4s ease-in-out infinite;
-    }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    /* AI */
+    .analyse-btn{width:100%;padding:15px;background:linear-gradient(135deg,#1e3a5f,#0f2040);border:1px solid var(--blue);border-radius:var(--radius);color:#a8c8f0;font-family:'Cinzel',serif;font-size:0.9rem;letter-spacing:0.1em;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s,transform 0.15s;}
+    .analyse-btn:active{transform:scale(0.98);}
+    .analyse-btn:disabled{opacity:0.4;cursor:not-allowed;}
+    .analysis-loading{background:var(--surface);border:1px solid #3a5f8a44;border-radius:var(--radius);padding:32px 20px;text-align:center;margin-bottom:16px;}
+    .spinner{width:40px;height:40px;margin:0 auto 16px;border:3px solid #3a5f8a33;border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .analysis-loading p{color:var(--muted);font-style:italic;font-size:0.9rem;}
 
-    .hero h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.1rem; font-weight: 400;
-      color: var(--sand); letter-spacing: 0.15em;
-      text-transform: uppercase; margin-bottom: 6px;
-    }
-    .hero p { color: var(--muted); font-size: 1rem; font-style: italic; }
+    /* Hex Grid */
+    .hex-grid-container{background:var(--surface);border:1px solid #c9933a22;border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+    .hex-grid-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+    .hex-svg{display:block;margin:0 auto;}
+    .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+    .legend-item{display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--muted);}
+    .legend-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+    .analysis-summary{background:var(--surface2);border:1px solid #3a5f8a33;border-radius:10px;padding:14px;margin-bottom:12px;font-size:0.85rem;color:var(--sand);line-height:1.6;}
+    .warn-notice{background:#c9933a0d;border:1px solid #c9933a33;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:0.8rem;color:var(--gold-lt);display:flex;gap:8px;}
 
-    .main-action {
-      margin: 24px 20px;
-      background: linear-gradient(135deg, #2a1f0e, #1c1508);
-      border: 1px solid var(--gold);
-      border-radius: var(--radius);
-      padding: 24px;
-      cursor: pointer;
-      display: flex; align-items: center; gap: 16px;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 24px #c9933a18;
-      position: relative; overflow: hidden;
-    }
-    .main-action::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, #c9933a12, transparent);
-      opacity: 0; transition: opacity 0.2s;
-    }
-    .main-action:active { transform: scale(0.98); }
-    .main-action:hover::before { opacity: 1; }
-    .main-action-icon { font-size: 2.2rem; line-height: 1; }
-    .main-action-text h3 {
-      font-family: 'Cinzel', serif; font-size: 1rem;
-      color: var(--gold-lt); margin-bottom: 4px;
-    }
-    .main-action-text p { color: var(--muted); font-size: 0.85rem; }
+    /* Settings */
+    .settings-content{flex:1;padding:20px;overflow-y:auto;}
+    .settings-section{margin-bottom:28px;}
+    .settings-section h3{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+    .settings-row{background:var(--surface);border:1px solid #c9933a1a;border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+    .settings-row-label{font-size:0.95rem;color:var(--text);}
+    .settings-row-value{font-size:0.8rem;color:var(--muted);font-family:monospace;}
+    .settings-row-btn{background:none;border:1px solid #c9933a33;border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.7rem;padding:5px 12px;cursor:pointer;}
+    .key-status{display:inline-flex;align-items:center;gap:6px;font-size:0.8rem;margin-top:4px;}
+    .key-status.set{color:var(--green);}
+    .key-status.missing{color:var(--red);}
 
-    .section-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--muted);
-      padding: 0 20px 10px;
-    }
-
-    .game-list { padding: 0 20px; flex: 1; }
-
-    .empty-state {
-      text-align: center; padding: 48px 20px;
-      color: var(--muted); font-style: italic;
-    }
-    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
-
-    .game-card {
-      background: var(--surface);
-      border: 1px solid #c9933a1a;
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: border-color 0.2s, transform 0.15s;
-      display: flex; align-items: center; gap: 14px;
-    }
-    .game-card:active { transform: scale(0.99); }
-    .game-card:hover { border-color: #c9933a44; }
-    .game-card-hex { font-size: 1.8rem; flex-shrink: 0; }
-    .game-card-info { flex: 1; }
-    .game-card-info h4 {
-      font-family: 'Cinzel', serif; font-size: 0.85rem;
-      color: var(--gold-lt); margin-bottom: 3px;
-    }
-    .game-card-info p { color: var(--muted); font-size: 0.8rem; }
-    .game-card-winner {
-      font-size: 0.75rem; color: var(--green);
-      background: #4a7c5918; border: 1px solid #4a7c5933;
-      border-radius: 20px; padding: 3px 10px;
-      font-family: 'Cinzel', serif;
-    }
-
-    /* ── Bottom nav ── */
-    .bottom-nav {
-      display: flex;
-      border-top: 1px solid #c9933a22;
-      background: var(--surface);
-      position: sticky; bottom: 0;
-    }
-    .nav-btn {
-      flex: 1; background: none; border: none;
-      color: var(--muted); padding: 14px 8px 10px;
-      cursor: pointer; font-family: 'Crimson Pro', serif;
-      font-size: 0.7rem; letter-spacing: 0.08em;
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      transition: color 0.2s;
-      text-transform: uppercase;
-    }
-    .nav-btn .nav-icon { font-size: 1.3rem; }
-    .nav-btn.active { color: var(--gold); }
-
-    /* ── New Game screen ── */
-    .new-game-content { flex: 1; padding: 20px; overflow-y: auto; }
-
-    .step-indicator {
-      display: flex; gap: 8px; justify-content: center;
-      margin-bottom: 28px;
-    }
-    .step-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--surface2); transition: background 0.3s;
-    }
-    .step-dot.active { background: var(--gold); }
-    .step-dot.done { background: var(--green); }
-
-    .step { display: none; animation: fadeIn 0.3s ease; }
-    .step.active { display: block; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-
-    .step-title {
-      font-family: 'Cinzel', serif; font-size: 1.1rem;
-      color: var(--gold-lt); margin-bottom: 6px;
-    }
-    .step-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 24px; font-style: italic; }
-
-    /* Photo capture area */
-    .photo-zone {
-      border: 2px dashed #c9933a44;
-      border-radius: var(--radius);
-      padding: 40px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      position: relative; overflow: hidden;
-      background: var(--surface);
-      margin-bottom: 16px;
-    }
-    .photo-zone:hover { border-color: var(--gold); background: var(--surface2); }
-    .photo-zone.has-photo { padding: 0; border-style: solid; }
-    .photo-zone img { width: 100%; border-radius: 12px; display: block; }
-    .photo-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-    .photo-zone-icon { font-size: 2.5rem; margin-bottom: 12px; }
-    .photo-zone-text { color: var(--muted); font-size: 0.9rem; }
-    .photo-zone-text strong { color: var(--sand); display: block; font-size: 1rem; margin-bottom: 4px; }
-
-    .photo-options { display: flex; gap: 10px; margin-bottom: 20px; }
-    .photo-opt-btn {
-      flex: 1; background: var(--surface); border: 1px solid #c9933a33;
-      border-radius: 10px; padding: 12px; cursor: pointer;
-      color: var(--sand); font-family: 'Cinzel', serif; font-size: 0.75rem;
-      letter-spacing: 0.05em; display: flex; flex-direction: column;
-      align-items: center; gap: 6px; transition: border-color 0.2s, background 0.2s;
-    }
-    .photo-opt-btn:hover { border-color: var(--gold); background: var(--surface2); }
-    .photo-opt-btn .opt-icon { font-size: 1.5rem; }
-
-    /* Form fields */
-    .field { margin-bottom: 18px; }
-    .field label {
-      display: block; font-family: 'Cinzel', serif;
-      font-size: 0.7rem; letter-spacing: 0.15em;
-      text-transform: uppercase; color: var(--muted);
-      margin-bottom: 8px;
-    }
-    .field input, .field select {
-      width: 100%; background: var(--surface);
-      border: 1px solid #c9933a33; border-radius: 10px;
-      padding: 12px 14px; color: var(--text);
-      font-family: 'Crimson Pro', serif; font-size: 1rem;
-      outline: none; transition: border-color 0.2s;
-      -webkit-appearance: none;
-    }
-    .field input:focus, .field select:focus { border-color: var(--gold); }
-    .field input::placeholder { color: var(--muted); }
-
-    .player-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
-    .player-row { display: flex; gap: 8px; align-items: center; }
-    .player-row input { flex: 1; }
-    .remove-btn {
-      background: none; border: 1px solid #b84c3a44;
-      border-radius: 8px; color: var(--red); width: 36px; height: 44px;
-      cursor: pointer; font-size: 1rem; flex-shrink: 0;
-      transition: background 0.2s;
-    }
-    .remove-btn:hover { background: #b84c3a18; }
-
-    .add-player-btn {
-      background: none; border: 1px dashed #c9933a44;
-      border-radius: 10px; padding: 10px;
-      color: var(--gold); font-family: 'Cinzel', serif;
-      font-size: 0.75rem; letter-spacing: 0.1em;
-      cursor: pointer; width: 100%;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .add-player-btn:hover { border-color: var(--gold); background: var(--surface2); }
-
-    /* Result field */
-    .winner-select { display: flex; flex-direction: column; gap: 8px; }
-    .winner-opt {
-      background: var(--surface); border: 1px solid #c9933a22;
-      border-radius: 10px; padding: 12px 16px;
-      cursor: pointer; display: flex; align-items: center; gap: 10px;
-      transition: border-color 0.2s, background 0.2s;
-      color: var(--text); font-size: 0.95rem;
-    }
-    .winner-opt:hover { border-color: var(--gold); }
-    .winner-opt.selected { border-color: var(--green); background: #4a7c5910; }
-    .winner-opt .check { color: var(--green); font-size: 1rem; margin-left: auto; opacity: 0; }
-    .winner-opt.selected .check { opacity: 1; }
-
-    /* CTA buttons */
-    .btn-primary {
-      width: 100%; padding: 15px;
-      background: linear-gradient(135deg, var(--gold), #a0712a);
-      border: none; border-radius: var(--radius);
-      color: #1a1208; font-family: 'Cinzel', serif;
-      font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em;
-      cursor: pointer; margin-top: 8px;
-      transition: opacity 0.2s, transform 0.15s;
-      text-transform: uppercase;
-    }
-    .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
-
-    .btn-secondary {
-      width: 100%; padding: 13px;
-      background: none; border: 1px solid #c9933a44;
-      border-radius: var(--radius); color: var(--gold);
-      font-family: 'Cinzel', serif; font-size: 0.85rem;
-      letter-spacing: 0.08em; cursor: pointer; margin-top: 8px;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .btn-secondary:hover { border-color: var(--gold); background: var(--surface2); }
-
-    /* ── Detail screen ── */
-    .detail-content { flex: 1; padding: 20px; overflow-y: auto; }
-    .detail-photo { width: 100%; border-radius: var(--radius); margin-bottom: 20px; }
-    .detail-photo-placeholder {
-      width: 100%; aspect-ratio: 4/3;
-      background: var(--surface2); border-radius: var(--radius);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 3rem; margin-bottom: 20px;
-      border: 1px solid #c9933a1a;
-    }
-    .detail-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-    .meta-chip {
-      background: var(--surface2); border: 1px solid #c9933a22;
-      border-radius: 20px; padding: 6px 14px;
-      font-size: 0.8rem; color: var(--sand);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .detail-section { margin-bottom: 20px; }
-    .detail-section h3 {
-      font-family: 'Cinzel', serif; font-size: 0.7rem;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 12px;
-    }
-    .player-result {
-      display: flex; align-items: center;
-      background: var(--surface); border: 1px solid #c9933a1a;
-      border-radius: 10px; padding: 12px 16px;
-      margin-bottom: 8px;
-    }
-    .player-result .name { flex: 1; font-size: 0.95rem; }
-    .player-result .crown { font-size: 1.1rem; }
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:#0f0d08ee;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.show{display:flex;}
+    .modal{background:var(--surface);border:1px solid var(--gold);border-radius:var(--radius);padding:28px;width:100%;max-width:400px;}
+    .modal h2{font-family:'Cinzel',serif;color:var(--gold-lt);font-size:1rem;margin-bottom:8px;}
+    .modal p{color:var(--muted);font-size:0.85rem;margin-bottom:16px;line-height:1.5;}
+    .modal input{width:100%;background:var(--bg);border:1px solid #c9933a33;border-radius:10px;padding:12px;color:var(--text);font-family:monospace;font-size:0.85rem;outline:none;margin-bottom:6px;}
+    .modal input:focus{border-color:var(--gold);}
+    .modal-note{font-size:0.75rem;color:var(--muted);font-style:italic;margin-bottom:16px;line-height:1.4;}
 
     /* Toast */
-    .toast {
-      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--green); color: white;
-      padding: 10px 20px; border-radius: 20px;
-      font-family: 'Cinzel', serif; font-size: 0.8rem;
-      opacity: 0; transition: opacity 0.3s, transform 0.3s;
-      pointer-events: none; white-space: nowrap; z-index: 100;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #c9933a33; border-radius: 2px; }
+    .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:white;padding:10px 20px;border-radius:20px;font-family:'Cinzel',serif;font-size:0.8rem;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;z-index:100;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .toast.error{background:var(--red);}
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-thumb{background:#c9933a33;border-radius:2px;}
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════ HOME ═══════════════════════════════ -->
+<!-- HOME -->
 <div class="screen active" id="screen-home">
   <header>
     <h1>CATAN LOG</h1>
-    <span style="color:var(--muted);font-size:0.75rem;font-family:'Cinzel',serif;letter-spacing:0.1em">v0.1</span>
+    <button class="header-action" onclick="showScreen('screen-settings')">⚙ Settings</button>
   </header>
-
   <div style="flex:1;overflow-y:auto">
     <div class="hero">
-      <svg class="hex-logo" viewBox="0 0 100 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="hex-logo" viewBox="0 0 100 115" fill="none">
         <polygon points="50,5 95,28.75 95,86.25 50,110 5,86.25 5,28.75" fill="#1c1810" stroke="#c9933a" stroke-width="2"/>
         <polygon points="50,18 82,35.5 82,79.5 50,97 18,79.5 18,35.5" fill="#261f14" stroke="#c9933a44" stroke-width="1"/>
         <text x="50" y="65" text-anchor="middle" font-family="Cinzel" font-size="28" fill="#c9933a" font-weight="700">⬡</text>
@@ -378,394 +181,458 @@
       <h2>Your Games</h2>
       <p id="home-subtitle">No sessions recorded yet</p>
     </div>
-
     <div class="main-action" onclick="showScreen('screen-new')">
       <div class="main-action-icon">📷</div>
-      <div class="main-action-text">
-        <h3>New Game Session</h3>
-        <p>Photograph & log your board</p>
-      </div>
+      <div class="main-action-text"><h3>New Game Session</h3><p>Photograph &amp; log your board</p></div>
       <span style="color:var(--gold);font-size:1.2rem">›</span>
     </div>
-
     <div class="section-title">Recent Sessions</div>
-    <div class="game-list" id="game-list">
-      <div class="empty-state">
-        <div class="empty-icon">🎲</div>
-        <p>Your logged games will appear here.<br>Start by capturing a board!</p>
-      </div>
-    </div>
+    <div class="game-list" id="game-list"></div>
   </div>
-
   <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="showScreen('screen-home')">
-      <span class="nav-icon">🏠</span>Home
-    </button>
-    <button class="nav-btn" onclick="showScreen('screen-new')">
-      <span class="nav-icon">＋</span>New Game
-    </button>
-    <button class="nav-btn" onclick="showScreen('screen-history')">
-      <span class="nav-icon">📜</span>History
-    </button>
+    <button class="nav-btn active" onclick="showScreen('screen-home')"><span class="nav-icon">🏠</span>Home</button>
+    <button class="nav-btn" onclick="showScreen('screen-new')"><span class="nav-icon">＋</span>New Game</button>
+    <button class="nav-btn" onclick="showScreen('screen-history')"><span class="nav-icon">📜</span>History</button>
   </nav>
 </div>
 
-<!-- ═══════════════════════════════ NEW GAME ═══════════════════════════════ -->
+<!-- NEW GAME -->
 <div class="screen" id="screen-new">
   <header>
     <button class="back-btn" onclick="showScreen('screen-home')">‹</button>
     <h1>NEW SESSION</h1>
-    <div style="width:40px"></div>
+    <div style="width:60px"></div>
   </header>
-
   <div class="new-game-content">
     <div class="step-indicator">
       <div class="step-dot active" id="dot-0"></div>
       <div class="step-dot" id="dot-1"></div>
       <div class="step-dot" id="dot-2"></div>
     </div>
-
-    <!-- Step 0: Photo -->
     <div class="step active" id="step-0">
       <div class="step-title">Capture the Board</div>
       <div class="step-sub">Take a photo or upload an image of your Catan board</div>
-
       <div class="photo-options">
-        <label class="photo-opt-btn">
-          <span class="opt-icon">📷</span>Camera
-          <input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(this)">
-        </label>
-        <label class="photo-opt-btn">
-          <span class="opt-icon">🖼️</span>Gallery
-          <input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)">
-        </label>
+        <label class="photo-opt-btn"><span class="opt-icon">📷</span>Camera<input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(this)"></label>
+        <label class="photo-opt-btn"><span class="opt-icon">🖼️</span>Gallery<input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)"></label>
       </div>
-
       <div class="photo-zone" id="photo-zone">
         <div class="photo-zone-icon">⬡</div>
-        <div class="photo-zone-text">
-          <strong>No photo selected</strong>
-          Use the buttons above to add your board photo
-        </div>
+        <div class="photo-zone-text"><strong>No photo selected</strong>Use the buttons above to add your board photo</div>
       </div>
-
-      <button class="btn-primary" onclick="nextStep()" id="btn-step0">Continue →</button>
+      <button class="btn-primary" onclick="nextStep()">Continue →</button>
       <button class="btn-secondary" onclick="skipPhoto()">Skip for now</button>
     </div>
-
-    <!-- Step 1: Players -->
     <div class="step" id="step-1">
       <div class="step-title">Who's Playing?</div>
       <div class="step-sub">Add the players in this session</div>
-
-      <div class="field">
-        <label>Date</label>
-        <input type="date" id="game-date" />
-      </div>
-
+      <div class="field"><label>Date</label><input type="date" id="game-date"/></div>
       <div class="field">
         <label>Players</label>
         <div class="player-list" id="player-list">
-          <div class="player-row">
-            <input type="text" placeholder="Player name" class="player-input" />
-          </div>
+          <div class="player-row"><input type="text" placeholder="Player name" class="player-input"/></div>
         </div>
         <button class="add-player-btn" onclick="addPlayer()">+ Add Player</button>
       </div>
-
       <button class="btn-primary" onclick="nextStep()">Continue →</button>
       <button class="btn-secondary" onclick="prevStep()">‹ Back</button>
     </div>
-
-    <!-- Step 2: Result -->
     <div class="step" id="step-2">
       <div class="step-title">Who Won?</div>
       <div class="step-sub">Select the winner of this session</div>
-
-      <div class="winner-select" id="winner-select">
-        <div class="winner-opt" onclick="selectWinner(this, 'Unknown')">
-          <span>🎲</span> Unknown / Not finished
-          <span class="check">✓</span>
-        </div>
-      </div>
-
+      <div class="winner-select" id="winner-select"></div>
       <button class="btn-primary" onclick="saveGame()" style="margin-top:24px">Save Session ✓</button>
       <button class="btn-secondary" onclick="prevStep()">‹ Back</button>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════ HISTORY ═══════════════════════════════ -->
+<!-- HISTORY -->
 <div class="screen" id="screen-history">
   <header>
     <button class="back-btn" onclick="showScreen('screen-home')">‹</button>
     <h1>HISTORY</h1>
     <div style="width:40px"></div>
   </header>
-  <div style="flex:1;padding:20px;overflow-y:auto">
-    <div id="history-list">
-      <div class="empty-state">
-        <div class="empty-icon">📜</div>
-        <p>No games recorded yet.</p>
-      </div>
-    </div>
-  </div>
+  <div style="flex:1;padding:20px;overflow-y:auto" id="history-list"></div>
   <nav class="bottom-nav">
-    <button class="nav-btn" onclick="showScreen('screen-home')">
-      <span class="nav-icon">🏠</span>Home
-    </button>
-    <button class="nav-btn" onclick="showScreen('screen-new')">
-      <span class="nav-icon">＋</span>New Game
-    </button>
-    <button class="nav-btn active">
-      <span class="nav-icon">📜</span>History
-    </button>
+    <button class="nav-btn" onclick="showScreen('screen-home')"><span class="nav-icon">🏠</span>Home</button>
+    <button class="nav-btn" onclick="showScreen('screen-new')"><span class="nav-icon">＋</span>New Game</button>
+    <button class="nav-btn active"><span class="nav-icon">📜</span>History</button>
   </nav>
 </div>
 
-<!-- ═══════════════════════════════ DETAIL ═══════════════════════════════ -->
+<!-- DETAIL -->
 <div class="screen" id="screen-detail">
   <header>
     <button class="back-btn" id="detail-back">‹</button>
     <h1>SESSION</h1>
-    <div style="width:40px"></div>
+    <div style="width:60px"></div>
   </header>
   <div class="detail-content" id="detail-content"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="screen" id="screen-settings">
+  <header>
+    <button class="back-btn" onclick="showScreen('screen-home')">‹</button>
+    <h1>SETTINGS</h1>
+    <div style="width:40px"></div>
+  </header>
+  <div class="settings-content">
+    <div class="settings-section">
+      <h3>AI Analysis</h3>
+      <div class="settings-row">
+        <div>
+          <div class="settings-row-label">Anthropic API Key</div>
+          <div id="key-status-display" class="key-status missing">● Not configured</div>
+        </div>
+        <button class="settings-row-btn" onclick="showApiModal()">Configure</button>
+      </div>
+      <p style="color:var(--muted);font-size:0.78rem;margin-top:8px;line-height:1.5;font-style:italic">Your key is stored only on this device and sent exclusively to Anthropic when you analyse a board.</p>
+    </div>
+    <div class="settings-section">
+      <h3>Data</h3>
+      <div class="settings-row">
+        <div class="settings-row-label">Saved sessions</div>
+        <div class="settings-row-value" id="session-count-setting">0</div>
+      </div>
+      <button class="btn-secondary" onclick="clearAllData()" style="border-color:#b84c3a44;color:var(--red);margin-top:8px">Clear All Data</button>
+    </div>
+    <div class="settings-section">
+      <h3>About</h3>
+      <div class="settings-row"><div class="settings-row-label">Version</div><div class="settings-row-value">Sprint 2 — AI Detection</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="api-modal">
+  <div class="modal">
+    <h2>🔑 Configure API Key</h2>
+    <p>Enter your Anthropic API key to enable AI board analysis. Find it at <strong style="color:var(--sand)">console.anthropic.com</strong> under API Keys.</p>
+    <input type="password" id="api-key-input" placeholder="sk-ant-..." autocomplete="off"/>
+    <p class="modal-note">Stored locally on this device only. Never sent to any server other than Anthropic's.</p>
+    <button class="btn-primary" onclick="saveApiKey()">Save Key</button>
+    <button class="btn-secondary" onclick="closeApiModal()">Cancel</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── State ──
-  let games = JSON.parse(localStorage.getItem('catan-games') || '[]');
-  let currentPhoto = null;
-  let currentStep = 0;
-  let selectedWinner = 'Unknown';
-  let prevScreen = 'screen-home';
+// ── State ──
+let games = JSON.parse(localStorage.getItem('catan-games') || '[]');
+let currentPhoto = null, currentStep = 0, selectedWinner = 'Unknown', prevScreen = 'screen-home';
 
-  // ── Screen navigation ──
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (id === 'screen-home') renderHome();
-    if (id === 'screen-history') renderHistory();
-    if (id === 'screen-new') initNewGame();
+// ── Navigation ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'screen-home') renderHome();
+  if (id === 'screen-history') renderHistory();
+  if (id === 'screen-new') initNewGame();
+  if (id === 'screen-settings') renderSettings();
+}
+
+// ── New Game ──
+function initNewGame() {
+  currentStep = 0; currentPhoto = null; selectedWinner = 'Unknown';
+  document.getElementById('game-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('player-list').innerHTML = `<div class="player-row"><input type="text" placeholder="Player name" class="player-input"/></div>`;
+  updateSteps();
+  const zone = document.getElementById('photo-zone');
+  zone.innerHTML = `<div class="photo-zone-icon">⬡</div><div class="photo-zone-text"><strong>No photo selected</strong>Use the buttons above to add your board photo</div>`;
+  zone.classList.remove('has-photo');
+}
+
+function updateSteps() {
+  document.querySelectorAll('.step').forEach((s,i) => s.classList.toggle('active', i===currentStep));
+  document.querySelectorAll('.step-dot').forEach((d,i) => { d.classList.toggle('active',i===currentStep); d.classList.toggle('done',i<currentStep); });
+}
+function nextStep() { if(currentStep<2){currentStep++;updateSteps();} if(currentStep===2)buildWinnerSelect(); }
+function prevStep() { if(currentStep>0){currentStep--;updateSteps();} }
+function skipPhoto() { currentPhoto=null; nextStep(); }
+
+function handlePhoto(input) {
+  if (!input.files||!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentPhoto = e.target.result;
+    const zone = document.getElementById('photo-zone');
+    zone.innerHTML = `<img src="${currentPhoto}" alt="Board">`;
+    zone.classList.add('has-photo');
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function addPlayer() {
+  const list = document.getElementById('player-list');
+  const row = document.createElement('div');
+  row.className = 'player-row';
+  row.innerHTML = `<input type="text" placeholder="Player name" class="player-input"/><button class="remove-btn" onclick="this.parentElement.remove()">✕</button>`;
+  list.appendChild(row);
+}
+
+function buildWinnerSelect() {
+  const players = getPlayers();
+  const ws = document.getElementById('winner-select');
+  ws.innerHTML = `<div class="winner-opt selected" onclick="selectWinner(this,'Unknown')"><span>🎲</span> Unknown / Not finished <span class="check">✓</span></div>`;
+  players.forEach(p => {
+    if (!p) return;
+    const div = document.createElement('div');
+    div.className = 'winner-opt';
+    div.onclick = function(){ selectWinner(this,p); };
+    div.innerHTML = `<span>👑</span> ${p} <span class="check">✓</span>`;
+    ws.appendChild(div);
+  });
+}
+
+function selectWinner(el,name) {
+  document.querySelectorAll('.winner-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected'); selectedWinner=name;
+}
+function getPlayers() { return Array.from(document.querySelectorAll('.player-input')).map(i=>i.value.trim()).filter(Boolean); }
+
+function saveGame() {
+  const players = getPlayers();
+  if (!players.length) { showToast('Add at least one player!',true); prevStep(); return; }
+  const game = { id:Date.now(), date:document.getElementById('game-date').value||new Date().toISOString().split('T')[0], players, winner:selectedWinner, photo:currentPhoto, boardAnalysis:null };
+  games.unshift(game); saveGames();
+  showToast('Session saved! 🎉');
+  setTimeout(()=>showScreen('screen-home'),1200);
+}
+
+// ── Render lists ──
+function renderHome() {
+  document.getElementById('home-subtitle').textContent = games.length ? `${games.length} session${games.length!==1?'s':''} recorded` : 'No sessions recorded yet';
+  const list = document.getElementById('game-list');
+  list.innerHTML = games.length ? games.slice(0,5).map(gameCardHTML).join('') : `<div class="empty-state"><div class="empty-icon">🎲</div><p>Your logged games will appear here.<br>Start by capturing a board!</p></div>`;
+}
+function renderHistory() {
+  document.getElementById('history-list').innerHTML = games.length ? games.map(gameCardHTML).join('') : `<div class="empty-state"><div class="empty-icon">📜</div><p>No games recorded yet.</p></div>`;
+}
+function gameCardHTML(g) {
+  return `<div class="game-card" onclick="showDetail(${g.id})">
+    ${g.photo?`<img class="game-card-thumb" src="${g.photo}" alt="Board">`:`<div class="game-card-hex">⬡</div>`}
+    <div class="game-card-info"><h4>${formatDate(g.date)}</h4><p>${g.players.join(', ')}</p></div>
+    ${g.boardAnalysis?`<span class="ai-badge">🤖 AI</span>`:''}
+    ${g.winner!=='Unknown'?`<span class="game-card-winner">👑 ${g.winner}</span>`:''}
+  </div>`;
+}
+
+// ── Detail ──
+function showDetail(id) {
+  const game = games.find(g=>g.id===id);
+  if (!game) return;
+  prevScreen = document.querySelector('.screen.active').id;
+  renderDetail(game);
+  document.getElementById('detail-back').onclick = ()=>showScreen(prevScreen);
+  showScreen('screen-detail');
+}
+
+function renderDetail(game) {
+  const apiKey = localStorage.getItem('catan-api-key');
+  let analysisSection = '';
+
+  if (game.boardAnalysis) {
+    analysisSection = `<div class="detail-section"><h3>Board Analysis</h3>${renderHexGrid(game.boardAnalysis)}${game.boardAnalysis.summary?`<div class="analysis-summary">${game.boardAnalysis.summary}</div>`:''}</div>`;
+  } else if (game.photo) {
+    analysisSection = `<div class="detail-section"><h3>Board Analysis</h3>
+      ${!apiKey?`<div class="warn-notice">⚠️ Configure your API key in Settings to enable AI analysis.</div>`:''}
+      <button class="analyse-btn" id="analyse-btn" onclick="analyseBoard(${game.id})" ${!apiKey?'disabled':''}>🤖 Analyse Board with AI</button>
+    </div>`;
+  } else {
+    analysisSection = `<div class="detail-section"><h3>Board Analysis</h3><div style="background:var(--surface);border-radius:10px;padding:20px;text-align:center;border:1px dashed #c9933a33"><p style="color:var(--muted);font-size:0.85rem;font-style:italic">No photo — add one to enable AI analysis</p></div></div>`;
   }
 
-  // ── New Game logic ──
-  function initNewGame() {
-    currentStep = 0;
-    currentPhoto = null;
-    selectedWinner = 'Unknown';
-    document.getElementById('game-date').value = new Date().toISOString().split('T')[0];
-    document.getElementById('player-list').innerHTML = `
-      <div class="player-row"><input type="text" placeholder="Player name" class="player-input" /></div>`;
-    updateSteps();
-    document.getElementById('photo-zone').innerHTML = `
-      <div class="photo-zone-icon">⬡</div>
-      <div class="photo-zone-text"><strong>No photo selected</strong>Use the buttons above to add your board photo</div>`;
-    document.getElementById('photo-zone').classList.remove('has-photo');
-  }
+  document.getElementById('detail-content').innerHTML = `
+    ${game.photo?`<img class="detail-photo" src="${game.photo}" alt="Board">`:`<div class="detail-photo-placeholder">⬡</div>`}
+    <div class="detail-meta">
+      <span class="meta-chip">📅 ${formatDate(game.date)}</span>
+      <span class="meta-chip">👥 ${game.players.length} players</span>
+      ${game.boardAnalysis?`<span class="meta-chip" style="color:#a8c8f0">🤖 AI analysed</span>`:''}
+    </div>
+    <div class="detail-section">
+      <h3>Players &amp; Result</h3>
+      ${game.players.map(p=>`<div class="player-result"><span class="name">${p}</span>${game.winner===p?'<span>👑</span>':''}</div>`).join('')}
+      ${game.winner==='Unknown'?`<p style="color:var(--muted);font-style:italic;font-size:0.85rem;margin-top:8px">No winner recorded</p>`:''}
+    </div>
+    ${analysisSection}
+    <button class="btn-secondary" onclick="deleteGame(${game.id})" style="margin-top:8px;border-color:#b84c3a44;color:var(--red)">Delete Session</button>
+    <div style="height:24px"></div>`;
+}
 
-  function updateSteps() {
-    document.querySelectorAll('.step').forEach((s, i) => {
-      s.classList.toggle('active', i === currentStep);
+// ── AI Analysis ──
+async function analyseBoard(gameId) {
+  const apiKey = localStorage.getItem('catan-api-key');
+  if (!apiKey) { showToast('Set API key in Settings first',true); return; }
+  const game = games.find(g=>g.id===gameId);
+  if (!game||!game.photo) return;
+
+  // Show loading
+  const btn = document.getElementById('analyse-btn');
+  if (btn) { btn.disabled=true; btn.innerHTML=`<div style="width:18px;height:18px;border:2px solid #3a5f8a33;border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite"></div> Analysing…`; }
+  const section = document.querySelector('#detail-content .detail-section:last-of-type');
+  if (section) section.innerHTML = `<h3>Board Analysis</h3><div class="analysis-loading"><div class="spinner"></div><p>Claude is reading your board…<br>This usually takes 15–30 seconds</p></div>`;
+
+  try {
+    const base64 = game.photo.split(',')[1];
+    const mediaType = game.photo.match(/data:([^;]+);/)[1];
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1500,
+        messages:[{
+          role:'user',
+          content:[
+            { type:'image', source:{ type:'base64', media_type:mediaType, data:base64 } },
+            { type:'text', text:`You are analysing a Catan board photograph. A standard Catan board has 19 hexagonal land tiles in rows of 3-4-5-4-3, plus surrounding sea tiles.
+
+Tile types by appearance:
+- wood: dark green forest
+- brick: red/brown hills  
+- wheat: golden yellow fields
+- sheep: light green pasture
+- ore: dark grey mountains
+- desert: sandy/tan, NO number token
+
+Number tokens 2-12 appear on all non-desert tiles (6 and 8 are usually red).
+
+Respond ONLY with this JSON, no other text:
+{
+  "tiles": [
+    {"row":0,"col":0,"type":"wood","number":5,"confident":true},
+    ... 19 tiles total, left-to-right top-to-bottom
+  ],
+  "summary": "One sentence about notable board features",
+  "overallConfidence": "high|medium|low",
+  "uncertainTiles": 0
+}
+
+Use "unknown" type and confident:false when unsure. Set number to null for desert or unreadable tokens.` }
+          ]
+        }]
+      })
     });
-    document.querySelectorAll('.step-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === currentStep);
-      d.classList.toggle('done', i < currentStep);
-    });
+
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||`API error ${res.status}`); }
+    const data = await res.json();
+    const text = data.content.map(c=>c.text||'').join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    const analysis = JSON.parse(clean);
+    game.boardAnalysis = analysis;
+    saveGames();
+    showToast('Board analysed! 🤖');
+    renderDetail(game);
+
+  } catch(err) {
+    console.error(err);
+    showToast('Analysis failed: '+err.message, true);
+    renderDetail(game);
   }
+}
 
-  function nextStep() {
-    if (currentStep < 2) { currentStep++; updateSteps(); }
-    if (currentStep === 2) buildWinnerSelect();
-  }
-  function prevStep() {
-    if (currentStep > 0) { currentStep--; updateSteps(); }
-  }
+// ── Hex Grid ──
+function renderHexGrid(analysis) {
+  if (!analysis||!analysis.tiles) return '';
+  const R=26, tiles=analysis.tiles;
+  const H=Math.sqrt(3)*R;
+  const svgW=310, svgH=250, cx=svgW/2, startY=34;
+  const rowConfig=[3,4,5,4,3];
+  let tileIdx=0, hexes='';
 
-  function skipPhoto() { currentPhoto = null; nextStep(); }
-
-  function handlePhoto(input) {
-    if (!input.files || !input.files[0]) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      currentPhoto = e.target.result;
-      const zone = document.getElementById('photo-zone');
-      zone.innerHTML = `<img src="${currentPhoto}" alt="Board photo">`;
-      zone.classList.add('has-photo');
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-
-  function addPlayer() {
-    const list = document.getElementById('player-list');
-    const row = document.createElement('div');
-    row.className = 'player-row';
-    row.innerHTML = `<input type="text" placeholder="Player name" class="player-input" />
-      <button class="remove-btn" onclick="this.parentElement.remove()">✕</button>`;
-    list.appendChild(row);
-  }
-
-  function buildWinnerSelect() {
-    const players = getPlayers();
-    const ws = document.getElementById('winner-select');
-    ws.innerHTML = `<div class="winner-opt selected" onclick="selectWinner(this,'Unknown')">
-      <span>🎲</span> Unknown / Not finished <span class="check">✓</span></div>`;
-    players.forEach(p => {
-      if (!p) return;
-      const div = document.createElement('div');
-      div.className = 'winner-opt';
-      div.onclick = function() { selectWinner(this, p); };
-      div.innerHTML = `<span>👑</span> ${p} <span class="check">✓</span>`;
-      ws.appendChild(div);
-    });
-  }
-
-  function selectWinner(el, name) {
-    document.querySelectorAll('.winner-opt').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedWinner = name;
-  }
-
-  function getPlayers() {
-    return Array.from(document.querySelectorAll('.player-input'))
-      .map(i => i.value.trim()).filter(Boolean);
-  }
-
-  function saveGame() {
-    const date = document.getElementById('game-date').value;
-    const players = getPlayers();
-    if (players.length === 0) { showToast('Add at least one player!'); prevStep(); return; }
-
-    const game = {
-      id: Date.now(),
-      date: date || new Date().toISOString().split('T')[0],
-      players,
-      winner: selectedWinner,
-      photo: currentPhoto,
-      boardAnalysis: null
-    };
-
-    games.unshift(game);
-    localStorage.setItem('catan-games', JSON.stringify(games));
-    showToast('Session saved! 🎉');
-    setTimeout(() => showScreen('screen-home'), 1200);
-  }
-
-  // ── Render home ──
-  function renderHome() {
-    const subtitle = document.getElementById('home-subtitle');
-    const list = document.getElementById('game-list');
-    subtitle.textContent = games.length === 0
-      ? 'No sessions recorded yet'
-      : `${games.length} session${games.length !== 1 ? 's' : ''} recorded`;
-
-    if (games.length === 0) {
-      list.innerHTML = `<div class="empty-state"><div class="empty-icon">🎲</div>
-        <p>Your logged games will appear here.<br>Start by capturing a board!</p></div>`;
-      return;
+  rowConfig.forEach((count,rowIdx) => {
+    const totalW = count*R*1.5 + R*0.5;
+    const startX = cx - totalW/2 + R;
+    const y = startY + rowIdx*H;
+    for(let col=0;col<count;col++) {
+      const tile = tiles[tileIdx]||{type:'unknown',number:null,confident:false};
+      hexes += makeHex(startX + col*R*1.72, y, R, tile);
+      tileIdx++;
     }
+  });
 
-    list.innerHTML = games.slice(0, 5).map(g => `
-      <div class="game-card" onclick="showDetail(${g.id})">
-        <div class="game-card-hex">${g.photo ? '📷' : '⬡'}</div>
-        <div class="game-card-info">
-          <h4>${formatDate(g.date)}</h4>
-          <p>${g.players.join(', ')}</p>
-        </div>
-        ${g.winner !== 'Unknown' ? `<span class="game-card-winner">👑 ${g.winner}</span>` : ''}
-      </div>`).join('');
-  }
+  const conf = analysis.overallConfidence||'';
+  const confColor = conf==='high'?'#4a7c59':conf==='medium'?'#c9933a':'#b84c3a';
+  const uncertain = analysis.uncertainTiles||0;
 
-  // ── Render history ──
-  function renderHistory() {
-    const list = document.getElementById('history-list');
-    if (games.length === 0) {
-      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📜</div><p>No games recorded yet.</p></div>`;
-      return;
-    }
-    list.innerHTML = games.map(g => `
-      <div class="game-card" onclick="showDetail(${g.id})">
-        <div class="game-card-hex">${g.photo ? '📷' : '⬡'}</div>
-        <div class="game-card-info">
-          <h4>${formatDate(g.date)}</h4>
-          <p>${g.players.join(', ')}</p>
-        </div>
-        ${g.winner !== 'Unknown' ? `<span class="game-card-winner">👑 ${g.winner}</span>` : ''}
-      </div>`).join('');
-  }
+  return `<div class="hex-grid-container">
+    <div class="hex-grid-title"><span>Identified Board</span><span style="color:${confColor};font-size:0.65rem">${conf.toUpperCase()} CONFIDENCE</span></div>
+    <svg class="hex-svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}">${hexes}</svg>
+    ${uncertain>0?`<div style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:0.75rem;color:var(--gold-lt)">⚠️ ${uncertain} tile${uncertain!==1?'s':''} flagged uncertain (dashed border)</div>`:''}
+    <div class="legend">
+      ${[['wood','#2d5a1b'],['brick','#8b3a2a'],['wheat','#c4952a'],['sheep','#5a8f3c'],['ore','#4a4a5a'],['desert','#c4a84a']].map(([n,c])=>`<div class="legend-item"><div class="legend-swatch" style="background:${c}"></div>${n}</div>`).join('')}
+    </div>
+  </div>`;
+}
 
-  // ── Show detail ──
-  function showDetail(id) {
-    const game = games.find(g => g.id === id);
-    if (!game) return;
-    prevScreen = document.querySelector('.screen.active').id;
+function makeHex(cx,cy,r,tile) {
+  const pts = Array.from({length:6},(_,i)=>{const a=Math.PI/180*(60*i-30);return`${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`;}).join(' ');
+  const colors = {wood:'#2d5a1b',brick:'#8b3a2a',wheat:'#c4952a',sheep:'#5a8f3c',ore:'#4a4a5a',desert:'#c4a84a',unknown:'#2a2a2a'};
+  const fill = colors[tile.type]||'#2a2a2a';
+  const stroke = tile.confident===false ? 'stroke:#e8b86d;stroke-width:2;stroke-dasharray:4,2' : 'stroke:#c9933a44;stroke-width:1.5';
+  const names = {wood:'WD',brick:'BR',wheat:'WH',sheep:'SH',ore:'OR',desert:'DS',unknown:'?'};
+  const numColor = (tile.number===6||tile.number===8)?'#ff8060':'#ede0c4';
+  return `<polygon points="${pts}" fill="${fill}" style="${stroke}"/>
+    <text x="${cx}" y="${cy-5}" style="font-family:Cinzel,serif;font-size:8px;fill:rgba(255,255,255,0.65);text-anchor:middle">${names[tile.type]||'?'}</text>
+    ${tile.number?`<text x="${cx}" y="${cy+9}" style="font-family:Cinzel,serif;font-size:11px;font-weight:700;fill:${numColor};text-anchor:middle">${tile.number}</text>`:''}
+    ${tile.confident===false?`<text x="${cx}" y="${cy+20}" style="font-size:9px;text-anchor:middle">⚠</text>`:''}`;
+}
 
-    const content = document.getElementById('detail-content');
-    content.innerHTML = `
-      ${game.photo
-        ? `<img class="detail-photo" src="${game.photo}" alt="Board">`
-        : `<div class="detail-photo-placeholder">⬡</div>`}
-      <div class="detail-meta">
-        <span class="meta-chip">📅 ${formatDate(game.date)}</span>
-        <span class="meta-chip">👥 ${game.players.length} players</span>
-        ${game.boardAnalysis ? `<span class="meta-chip">🤖 AI analysed</span>` : ''}
-      </div>
-      <div class="detail-section">
-        <h3>Players & Result</h3>
-        ${game.players.map(p => `
-          <div class="player-result">
-            <span class="name">${p}</span>
-            ${game.winner === p ? '<span class="crown">👑</span>' : ''}
-          </div>`).join('')}
-        ${game.winner === 'Unknown' ? `<p style="color:var(--muted);font-style:italic;font-size:0.85rem;margin-top:8px">No winner recorded</p>` : ''}
-      </div>
-      ${game.boardAnalysis ? `
-        <div class="detail-section">
-          <h3>Board Analysis</h3>
-          <div style="background:var(--surface);border-radius:10px;padding:14px;font-size:0.9rem;color:var(--sand);border:1px solid #c9933a22">
-            ${game.boardAnalysis}
-          </div>
-        </div>` : `
-        <div class="detail-section">
-          <h3>Board Analysis</h3>
-          <div style="background:var(--surface);border-radius:10px;padding:20px;text-align:center;border:1px dashed #c9933a33">
-            <p style="color:var(--muted);font-size:0.85rem;font-style:italic">AI board analysis coming in Sprint 2</p>
-          </div>
-        </div>`}
-      <button class="btn-secondary" onclick="deleteGame(${game.id})" style="margin-top:16px;border-color:#b84c3a44;color:var(--red)">Delete Session</button>
-    `;
+// ── API Key ──
+function showApiModal() {
+  document.getElementById('api-key-input').value = localStorage.getItem('catan-api-key')?'••••••••••••••':'';
+  document.getElementById('api-modal').classList.add('show');
+}
+function closeApiModal() { document.getElementById('api-modal').classList.remove('show'); }
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val||val.includes('•')) { closeApiModal(); return; }
+  if (!val.startsWith('sk-')) { showToast('Key should start with sk-',true); return; }
+  localStorage.setItem('catan-api-key',val);
+  closeApiModal(); renderSettings(); showToast('API key saved ✓');
+}
 
-    document.getElementById('detail-back').onclick = () => showScreen(prevScreen);
-    showScreen('screen-detail');
-  }
+// ── Settings ──
+function renderSettings() {
+  const apiKey = localStorage.getItem('catan-api-key');
+  const el = document.getElementById('key-status-display');
+  if (el) { el.className=`key-status ${apiKey?'set':'missing'}`; el.textContent=apiKey?'● Configured':'● Not configured'; }
+  const c = document.getElementById('session-count-setting');
+  if (c) c.textContent = games.length;
+}
 
-  function deleteGame(id) {
-    if (!confirm('Delete this session?')) return;
-    games = games.filter(g => g.id !== id);
-    localStorage.setItem('catan-games', JSON.stringify(games));
-    showToast('Session deleted');
-    showScreen('screen-home');
-  }
+function clearAllData() {
+  if (!confirm('Delete all sessions? This cannot be undone.')) return;
+  games=[]; saveGames(); showToast('All data cleared'); renderSettings();
+}
 
-  // ── Helpers ──
-  function formatDate(str) {
-    if (!str) return 'Unknown date';
-    const d = new Date(str + 'T12:00:00');
-    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
-  }
+// ── Helpers ──
+function saveGames() { localStorage.setItem('catan-games',JSON.stringify(games)); }
+function deleteGame(id) {
+  if (!confirm('Delete this session?')) return;
+  games=games.filter(g=>g.id!==id); saveGames(); showToast('Session deleted'); showScreen(prevScreen);
+}
+function formatDate(str) {
+  if (!str) return 'Unknown date';
+  return new Date(str+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+}
+function showToast(msg,isError=false) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast${isError?' error':''} show`;
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
-
-  // ── Init ──
-  renderHome();
+renderHome();
 </script>
 </body>
 </html>
