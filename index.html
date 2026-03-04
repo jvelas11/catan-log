@@ -426,6 +426,10 @@
       <h3>Data</h3>
       <div class="settings-row"><div class="settings-row-label">Sessions</div><div class="settings-row-value" id="setting-sessions">0</div></div>
       <div class="settings-row"><div class="settings-row-label">Players</div><div class="settings-row-value" id="setting-players">0</div></div>
+      <div id="recover-btn-wrap" style="display:none">
+        <div class="warn-notice" style="margin-top:10px">⚠️ Previous sessions were found but not loaded. Tap below to recover them.</div>
+        <button class="btn-primary" onclick="recoverData()" style="background:linear-gradient(135deg,#3a5f8a,#1e3a5f);color:#a8c8f0;margin-top:6px">Recover Previous Sessions</button>
+      </div>
       <button class="btn-secondary" onclick="clearAllData()" style="border-color:#b84c3a44;color:var(--red);margin-top:8px">Clear All Data</button>
     </div>
     <div class="settings-section">
@@ -485,34 +489,94 @@ let editingPlayerId = null;
 // DATABASE — simple localStorage wrapper
 // ══════════════════════════════════════════
 function loadDB() {
+  // 1. Try loading the new format first
   const raw = localStorage.getItem('catan-db');
   if (raw) {
-    try { return JSON.parse(raw); } catch(e){}
-  }
-  // Migrate legacy data
-  const legacy = localStorage.getItem('catan-games');
-  if (legacy) {
     try {
-      const oldGames = JSON.parse(legacy);
-      const migrated = { players:[], games:[] };
-      const playerMap = {};
-      oldGames.forEach(og => {
-        const participants = [];
-        (og.players||[]).forEach(name => {
-          if (!playerMap[name]) {
-            const p = { id: uid(), name, preferredColor: COLORS[Object.keys(playerMap).length % COLORS.length].hex, createdAt: Date.now() };
-            migrated.players.push(p);
-            playerMap[name] = p.id;
-          }
-          participants.push({ id:uid(), playerId:playerMap[name], victoryPoints:0, isWinner: og.winner===name, hadLongestRoad:false, hadLargestArmy:false });
-        });
-        migrated.games.push({ id:og.id, date:og.date, photo:og.photo, boardAnalysis:og.boardAnalysis||null, expansion:'base', notes:'', participants, createdAt:og.id });
-      });
-      saveDB(migrated);
-      return migrated;
-    } catch(e) {}
+      const parsed = JSON.parse(raw);
+      // Validate it has the expected shape before trusting it
+      if (parsed && Array.isArray(parsed.players) && Array.isArray(parsed.games)) {
+        return parsed;
+      }
+    } catch(e) {
+      console.warn('catan-db parse failed:', e);
+    }
   }
-  return { players:[], games:[] };
+
+  // 2. No valid new-format data — attempt migration from legacy format
+  return attemptMigration();
+}
+
+function attemptMigration() {
+  const legacy = localStorage.getItem('catan-games');
+  if (!legacy) return { players:[], games:[] };
+
+  try {
+    const oldGames = JSON.parse(legacy);
+    if (!Array.isArray(oldGames) || oldGames.length === 0) return { players:[], games:[] };
+
+    const migrated = { players:[], games:[] };
+    const playerMap = {}; // name → id
+
+    oldGames.forEach((og, gameIdx) => {
+      const playerNames = Array.isArray(og.players) ? og.players : [];
+      const participants = [];
+
+      playerNames.forEach((name, nameIdx) => {
+        if (!name || typeof name !== 'string') return;
+        const cleanName = name.trim();
+        if (!cleanName) return;
+
+        // Create player profile if we haven't seen this name before
+        if (!playerMap[cleanName]) {
+          const colorIdx = Object.keys(playerMap).length % COLORS.length;
+          const p = {
+            id: uid(),
+            name: cleanName,
+            preferredColor: COLORS[colorIdx].hex,
+            createdAt: Date.now()
+          };
+          migrated.players.push(p);
+          playerMap[cleanName] = p.id;
+        }
+
+        participants.push({
+          id: uid(),
+          playerId: playerMap[cleanName],
+          victoryPoints: 0,
+          isWinner: og.winner === cleanName,
+          hadLongestRoad: false,
+          hadLargestArmy: false
+        });
+      });
+
+      // Use a stable id — fall back to index-based if og.id is missing
+      const gameId = og.id ? String(og.id) : uid();
+
+      migrated.games.push({
+        id: gameId,
+        date: og.date || new Date().toISOString().split('T')[0],
+        photo: og.photo || null,
+        boardAnalysis: og.boardAnalysis || null,
+        expansion: 'base',
+        notes: '',
+        participants,
+        createdAt: og.id || Date.now()
+      });
+    });
+
+    // Only persist if we actually got something useful
+    if (migrated.games.length > 0) {
+      localStorage.setItem('catan-db', JSON.stringify(migrated));
+      console.log(`Migration success: ${migrated.games.length} games, ${migrated.players.length} players`);
+    }
+
+    return migrated;
+
+  } catch(e) {
+    console.error('Migration failed:', e);
+    return { players:[], games:[] };
+  }
 }
 
 function saveDB(data) {
@@ -968,6 +1032,14 @@ function renderSettings() {
   if(el){el.className=`key-status ${apiKey?'set':'missing'}`;el.textContent=apiKey?'● Configured':'● Not configured';}
   const s=document.getElementById('setting-sessions');if(s)s.textContent=db.games.length;
   const pl=document.getElementById('setting-players');if(pl)pl.textContent=db.players.length;
+
+  // Show recovery option if legacy data exists but new db is empty
+  const recoverBtn = document.getElementById('recover-btn-wrap');
+  if (recoverBtn) {
+    const hasLegacy = !!localStorage.getItem('catan-games');
+    const isEmpty = db.games.length === 0;
+    recoverBtn.style.display = (hasLegacy && isEmpty) ? 'block' : 'none';
+  }
 }
 
 function showApiModal(){
@@ -981,6 +1053,21 @@ function saveApiKey(){
   localStorage.setItem('catan-api-key',val);
   document.getElementById('api-modal').classList.remove('show');
   renderSettings();showToast('API key saved ✓');
+}
+
+function recoverData() {
+  // Force clear the new-format key so loadDB re-runs migration fresh
+  localStorage.removeItem('catan-db');
+  const recovered = attemptMigration();
+  if (recovered.games.length > 0) {
+    db = recovered;
+    saveDB();
+    showToast(`Recovered ${db.games.length} session${db.games.length!==1?'s':''}! 🎉`);
+    renderSettings();
+    renderHome();
+  } else {
+    showToast('No legacy data found to recover', true);
+  }
 }
 
 function clearAllData(){
