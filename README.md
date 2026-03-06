@@ -15,7 +15,7 @@ Built as a Progressive Web App (PWA) — install it to your home screen and use 
 
 ## How to use
 
-Visit the live app at `https://[username].github.io/catan-log` on your mobile browser and tap **Add to Home Screen** to install it as a PWA.
+Visit the live app at `https://jvelas11.github.io/catan-log/` on your mobile browser and tap **Add to Home Screen** to install it as a PWA.
 
 To enable AI board analysis, you'll need an [Anthropic API key](https://console.anthropic.com). Add it once via the Settings screen — it's stored only on your device.
 
