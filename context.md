@@ -7,7 +7,7 @@
 
 A mobile Progressive Web App (PWA) for logging Catan board game sessions. Built iteratively across sprints by a non-developer Product Owner working with an AI coding assistant.
 
-**Live URL:** `https://[username].github.io/catan-log`
+**Live URL:** `https://jvelas11.github.io/catan-log/`
 **Repository:** GitHub — `catan-log` repo, main branch
 **Primary device:** Android, Chrome browser
 **Installed as:** PWA (added to home screen)
