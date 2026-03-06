@@ -135,6 +135,43 @@
 
     /* Winner select */
     .winner-select{display:flex;flex-direction:column;gap:8px;}
+    .score-card{position:relative;background:var(--surface);border:1px solid #c9933a22;border-radius:var(--radius);margin-bottom:14px;overflow:hidden;transition:border-color 0.3s,box-shadow 0.3s;}
+    .score-card.is-winner{border-color:var(--gold);box-shadow:0 0 28px #c9933a28,inset 0 0 40px #c9933a08;}
+    .sc-accent{position:absolute;left:0;top:0;bottom:0;width:4px;}
+    .sc-header{display:flex;align-items:center;gap:12px;padding:14px 16px 12px 20px;border-bottom:1px solid #c9933a14;}
+    .sc-avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.95rem;font-weight:700;border:2px solid;}
+    .sc-name{font-family:'Cinzel',serif;font-size:0.95rem;color:var(--sand);margin-bottom:5px;}
+    .sc-winner-badge{display:inline-flex;align-items:center;gap:4px;font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:#c9933a14;border:1px solid #c9933a33;color:var(--muted);transition:all 0.35s;user-select:none;}
+    .sc-winner-badge.active{background:#c9933a30;border-color:var(--gold);color:var(--gold-lt);animation:pulse-gold 1.6s ease-in-out infinite;}
+    @keyframes pulse-gold{0%,100%{box-shadow:0 0 0 0 #c9933a44;}50%{box-shadow:0 0 0 6px #c9933a00;}}
+    .sc-score{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0;}
+    .sc-score-num{font-family:'Cinzel',serif;font-size:2.2rem;font-weight:700;line-height:1;color:var(--gold-lt);transition:color 0.3s,text-shadow 0.3s;}
+    .sc-score-num.at-ten{color:#ffd700;text-shadow:0 0 14px #ffd70055;}
+    .sc-score-unit{font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;}
+    .sc-body{padding:13px 16px 14px 20px;}
+    .sc-badges{display:flex;gap:8px;margin-bottom:12px;}
+    .sc-badge{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 6px;background:var(--surface2);border:1px solid #c9933a1a;border-radius:10px;font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.04em;color:var(--muted);cursor:pointer;transition:background 0.2s,border-color 0.2s,color 0.2s,transform 0.1s;user-select:none;}
+    .sc-badge:active{transform:scale(0.96);}
+    .sc-badge .b-pts{font-size:0.62rem;opacity:0.65;margin-left:1px;}
+    .sc-badge.road-on{background:#1e3d14;border-color:#5a8f3c;color:#8fcc6a;}
+    .sc-badge.army-on{background:#142040;border-color:#3a5f8a;color:#6a9ccc;}
+    .sc-badge.disabled{opacity:0.28;cursor:not-allowed;pointer-events:none;}
+    .sc-counters{display:flex;flex-direction:column;gap:7px;}
+    .sc-counter{display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:10px;padding:8px 10px 8px 12px;}
+    .sc-counter-label{flex:1;display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--sand);}
+    .sc-counter-label .c-icon{font-size:1rem;flex-shrink:0;}
+    .sc-counter-label .c-pts{font-size:0.66rem;color:var(--muted);font-style:italic;}
+    .sc-pip-track{display:flex;gap:3px;flex-shrink:0;}
+    .sc-pip{width:7px;height:7px;border-radius:50%;background:var(--surface);border:1px solid #c9933a28;transition:background 0.15s,border-color 0.15s;}
+    .sc-pip.on{background:var(--gold);border-color:var(--gold);}
+    .sc-controls{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+    .sc-btn{width:30px;height:30px;border-radius:50%;border:1px solid #c9933a33;background:none;color:var(--gold);font-size:1.1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background 0.15s,transform 0.1s;}
+    .sc-btn:active{background:#c9933a22;transform:scale(0.9);}
+    .sc-btn:disabled{opacity:0.22;cursor:not-allowed;transform:none;}
+    .sc-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold-lt);min-width:20px;text-align:center;flex-shrink:0;}
+    .sc-breakdown{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px;padding-top:10px;border-top:1px dashed #c9933a18;}
+    .sc-chip{font-size:0.7rem;color:var(--sand);background:var(--surface3);border-radius:5px;padding:3px 8px;}
+
     .winner-opt{background:var(--surface);border:1px solid #c9933a22;border-radius:10px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color 0.2s;color:var(--text);font-size:0.95rem;}
     .winner-opt.selected{border-color:var(--green);background:#4a7c5910;}
     .winner-opt .check{color:var(--green);margin-left:auto;opacity:0;}
@@ -609,7 +646,7 @@ function showScreen(id) {
 // NEW GAME FLOW
 // ══════════════════════════════════════════
 function initNewGame() {
-  newGame = { photo:null, participants:[], expansion:'base', notes:'' };
+  newGame = { photo:null, participants:[], expansion:'base', notes:'', longestRoad:null, largestArmy:null };
   currentStep = 0;
   document.getElementById('game-date').value = new Date().toISOString().split('T')[0];
   document.getElementById('game-notes').value = '';
@@ -667,7 +704,7 @@ function renderPlayerChips() {
 function togglePlayer(playerId) {
   const idx = newGame.participants.findIndex(x=>x.playerId===playerId);
   if (idx>=0) newGame.participants.splice(idx,1);
-  else newGame.participants.push({ id:uid(), playerId, victoryPoints:0, isWinner:false, hadLongestRoad:false, hadLargestArmy:false });
+  else newGame.participants.push({ id:uid(), playerId, settlements:0, cities:0, extraPoints:0, victoryPoints:0, isWinner:false, hadLongestRoad:false, hadLargestArmy:false });
   renderPlayerChips();
 }
 
@@ -679,35 +716,127 @@ function quickAddPlayer() {
   const p = { id:uid(), name, preferredColor: COLORS[db.players.length % COLORS.length].hex, createdAt:Date.now() };
   db.players.push(p);
   saveDB();
-  newGame.participants.push({ id:uid(), playerId:p.id, victoryPoints:0, isWinner:false, hadLongestRoad:false, hadLargestArmy:false });
+  newGame.participants.push({ id:uid(), playerId:p.id, settlements:0, cities:0, extraPoints:0, victoryPoints:0, isWinner:false, hadLongestRoad:false, hadLargestArmy:false });
   input.value='';
   renderPlayerChips();
 }
 
 // Step 2: VP and toggles
+const SC_MAX = { settlements:4, cities:4, extraPoints:10 };
+
+function scCalcScore(p) {
+  const part = newGame.participants.find(x => x.playerId === p.id);
+  if (!part) return 0;
+  return part.settlements
+       + (part.cities * 2)
+       + part.extraPoints
+       + (newGame.longestRoad === p.id ? 2 : 0)
+       + (newGame.largestArmy === p.id ? 2 : 0);
+}
+
+function scGetWinner() {
+  const players = newGame.participants.map(part => ({
+    id: part.playerId,
+    score: scCalcScore({ id: part.playerId })
+  }));
+  return players.find(p => p.score >= 10) || null;
+}
+
+function scToggleExclusive(playerId, badge) {
+  newGame[badge] = (newGame[badge] === playerId) ? null : playerId;
+  buildParticipantRows();
+}
+
+function scChangeCounter(playerId, field, delta) {
+  const part = newGame.participants.find(x => x.playerId === playerId);
+  if (!part) return;
+  const val = (part[field] || 0) + delta;
+  if (val < 0 || val > SC_MAX[field]) return;
+  part[field] = val;
+  buildParticipantRows();
+}
 function buildParticipantRows() {
   const container = document.getElementById('participant-rows');
-  container.innerHTML = newGame.participants.map(part=>{
+  const winner = scGetWinner();
+  container.innerHTML = newGame.participants.map(part => {
     const player = playerById(part.playerId);
     if (!player) return '';
-    return `<div class="participant-row" id="prow-${part.id}">
-      <div class="participant-header">
-        <div class="participant-color" style="background:${player.preferredColor}"></div>
-        <div class="participant-name">${player.name}</div>
-        <div class="vp-control">
-          <button class="vp-btn" onclick="changeVP('${part.id}',-1)">−</button>
-          <div class="vp-value" id="vp-${part.id}">${part.victoryPoints}</div>
-          <button class="vp-btn" onclick="changeVP('${part.id}',1)">+</button>
-        </div>
-      </div>
-      <div class="toggle-row">
-        <div class="toggle-chip ${part.isWinner?'on':''}" onclick="toggleField('${part.id}','isWinner')">👑 Winner</div>
-        <div class="toggle-chip ${part.hadLongestRoad?'on':''}" onclick="toggleField('${part.id}','hadLongestRoad')">🛤 Longest Road</div>
-        <div class="toggle-chip ${part.hadLargestArmy?'on':''}" onclick="toggleField('${part.id}','hadLargestArmy')">⚔️ Largest Army</div>
-      </div>
-    </div>`;
+    const pid    = player.id;
+    const score  = scCalcScore(player);
+    const isWin  = winner && winner.id === pid;
+    const locked = winner && winner.id !== pid;
+    const hasRoad = newGame.longestRoad === pid;
+    const hasArmy = newGame.largestArmy === pid;
+    const roadDisabled = !hasRoad && locked && score + 2 >= 10;
+    const armyDisabled = !hasArmy && locked && score + 2 >= 10;
+    const parts = [];
+    if (part.settlements) parts.push(part.settlements + (part.settlements===1?' settlement':' settlements'));
+    if (part.cities)      parts.push(part.cities + (part.cities===1?' city':' cities') + ' x2');
+    if (hasRoad)          parts.push('+2 longest road');
+    if (hasArmy)          parts.push('+2 largest army');
+    if (part.extraPoints) parts.push('+' + part.extraPoints + ' extra');
+    return '<div class="score-card' + (isWin?' is-winner':'') + '">'
+      + '<div class="sc-accent" style="background:' + player.preferredColor + '"></div>'
+      + '<div class="sc-header">'
+      +   '<div class="sc-avatar" style="background:' + player.preferredColor + '22;border-color:' + player.preferredColor + '88;color:' + player.preferredColor + '">'
+      +     player.name.slice(0,2).toUpperCase()
+      +   '</div>'
+      +   '<div style="flex:1">'
+      +     '<div class="sc-name">' + player.name + '</div>'
+      +     '<div class="sc-winner-badge' + (isWin?' active':'') + '">&#128081; ' + (isWin?'WINNER':'NOT YET') + '</div>'
+      +   '</div>'
+      +   '<div class="sc-score">'
+      +     '<div class="sc-score-num' + (isWin?' at-ten':'') + '">' + score + '</div>'
+      +     '<div class="sc-score-unit">pts</div>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="sc-body">'
+      +   '<div class="sc-badges">'
+      +     scRenderBadge(pid,'longestRoad','&#128740;','Longest Road',hasRoad,'road-on',roadDisabled)
+      +     scRenderBadge(pid,'largestArmy','&#9876;&#65039;','Largest Army',hasArmy,'army-on',armyDisabled)
+      +   '</div>'
+      +   '<div class="sc-counters">'
+      +     scRenderCounter(part,player,'settlements','&#127968;','Settlements','1pt each',true,locked)
+      +     scRenderCounter(part,player,'cities','&#127970;','Cities','2pts each',true,locked)
+      +     scRenderCounter(part,player,'extraPoints','&#11088;','Extra Points','1pt each',false,locked)
+      +   '</div>'
+      + (parts.length?'<div class="sc-breakdown">'+parts.map(function(b){return '<span class="sc-chip">'+b+'</span>';}).join('')+'</div>':'')
+      + '</div>'
+    + '</div>';
   }).join('');
 }
+
+function scRenderBadge(pid,badge,icon,label,active,activeClass,disabled){
+  var cls='sc-badge'+(active?' '+activeClass:'')+(disabled?' disabled':'');
+  var onclick=disabled?'':' onclick="scToggleExclusive(\''+pid+'\',\''+badge+'\')"';
+  return '<div class="'+cls+'"'+onclick+'>'
+    +'<span>'+icon+'</span><span>'+label+'</span><span class="b-pts">+2</span>'
+    +'</div>';
+}
+
+function scRenderCounter(part,player,field,icon,label,ptLabel,showPips,locked){
+  var val=part[field]||0;
+  var max=SC_MAX[field];
+  var score=scCalcScore(player);
+  var minusDisabled=val<=0;
+  var plusDisabled=val>=max||score>=11||(locked&&score>=9);
+  var pipHTML='';
+  if(showPips){
+    pipHTML='<div class="sc-pip-track">';
+    for(var i=0;i<max;i++) pipHTML+='<div class="sc-pip'+(i<val?' on':'')+'"></div>';
+    pipHTML+='</div>';
+  }
+  return '<div class="sc-counter">'
+    +'<div class="sc-counter-label"><span class="c-icon">'+icon+'</span><span>'+label+'</span><span class="c-pts">'+ptLabel+'</span></div>'
+    +pipHTML
+    +'<div class="sc-controls">'
+    +'<button class="sc-btn" onclick="scChangeCounter(\''+player.id+'\',\''+field+'\',-1)"'+(minusDisabled?' disabled':'')+'>&#8722;</button>'
+    +'<div class="sc-val">'+val+'</div>'
+    +'<button class="sc-btn" onclick="scChangeCounter(\''+player.id+'\',\''+field+'\',1)"'+(plusDisabled?' disabled':'')+'>&#43;</button>'
+    +'</div>'
+    +'</div>';
+}
+
 
 function changeVP(partId, delta) {
   const part = newGame.participants.find(p=>p.id===partId);
@@ -739,7 +868,15 @@ function saveGame() {
     boardAnalysis: null,
     expansion: document.getElementById('game-expansion').value,
     notes: document.getElementById('game-notes').value.trim(),
-    participants: newGame.participants,
+    participants: newGame.participants.map(part => {
+      const score = scCalcScore({ id: part.playerId });
+      return Object.assign({}, part, {
+        victoryPoints:  score,
+        isWinner:       score >= 10,
+        hadLongestRoad: newGame.longestRoad === part.playerId,
+        hadLargestArmy: newGame.largestArmy === part.playerId,
+      });
+    }),
     createdAt: Date.now()
   };
   db.games.unshift(game);
